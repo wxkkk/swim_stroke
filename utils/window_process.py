@@ -3,17 +3,19 @@ import numpy as np
 import cv2
 import h5py
 
+window_length = 120
+
 
 def window_data(path):
     data = pd.read_csv(path)
     data = data.dropna()
     data_wid = []
     label_wid = []
-    for i in range(1, (len(data) // 180) * 2):
-        i *= 180 - 90
-        # print(i)
-        data_wid_temp = data.loc[i:i + 179, ['1', '2', '3', '4', '5', '6']]
-        label_wid_temp = max(data.loc[i:i + 179, '0'])
+    for i in range(1, (len(data) // window_length) * 2):
+        i *= window_length // 2
+        print(i)
+        data_wid_temp = data.loc[i:i + window_length - 1, ['1', '2', '3', '4', '5', '6']]
+        label_wid_temp = max(data.loc[i:i + window_length - 1, '0'])
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
@@ -41,11 +43,11 @@ def window_data(path):
 
 def to_np(list_1, list_2):
 
-    data_arr = np.zeros((len(list_1), 180, 6, 1), dtype=np.uint8)
+    data_arr = np.zeros((len(list_1), window_length, 6, 1), dtype=np.uint8)
     label_arr = np.zeros((len(list_2), 1), dtype=np.uint8)
 
     for n in range(len(data_arr)):
-        list_1[n] = np.resize(list_1[n], (180, 6, 1))
+        list_1[n] = np.resize(list_1[n], (window_length, 6, 1))
         list_2[n] = np.resize(list_2[n], 1)
         data_arr[n] = list_1[n]
         label_arr[n] = list_2[n]
@@ -71,11 +73,11 @@ def process_data(path):
 
 # train_path = r'../train_data/merged.csv'
 #
-# input_path = r'../train_data/freestyle_team1_left_01.csv'
-#
-# d_a, l_a = process_data(input_path)
-#
-# print(len(d_a), l_a)
+input_path = r'../train_data/freestyle_team1_left_01.csv'
+
+d_a, l_a = process_data(input_path)
+
+print(len(d_a), l_a)
 
 #
 # print('data:\n', csv_file.loc[1130:1140, ['1', '2', '3', '4', '5', '6']])
