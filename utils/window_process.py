@@ -13,7 +13,7 @@ def window_data(path):
     label_wid = []
     for i in range(1, (len(data) // window_length) * 2):
         i *= window_length // 2
-        print(i)
+        # print(i)
         data_wid_temp = data.loc[i:i + window_length - 1, ['1', '2', '3', '4', '5', '6']]
         label_wid_temp = max(data.loc[i:i + window_length - 1, '0'])
 
@@ -73,11 +73,11 @@ def process_data(path):
 
 # train_path = r'../train_data/merged.csv'
 #
-input_path = r'../train_data/freestyle_team1_left_01.csv'
-
-d_a, l_a = process_data(input_path)
-
-print(len(d_a), l_a)
+# input_path = r'../train_data/freestyle_team1_left_01.csv'
+#
+# d_a, l_a = process_data(input_path)
+#
+# print(len(d_a), l_a)
 
 #
 # print('data:\n', csv_file.loc[1130:1140, ['1', '2', '3', '4', '5', '6']])

@@ -1,16 +1,18 @@
-import keras
+import tensorflow as tf
+
 import pandas as pd
 import numpy as np
 from utils import window_process
 
 # input_path = r'../train_data/freestyle_team1_left_01.csv'
 
-valid_path = r'../train_data/breaststroke_team1_left_61.csv'
+# valid_path = r'../train_data/breaststroke_team1_left_61.csv'
+valid_path = r'../train_data/freestyle_team1_right_01.csv'
 # valid = pd.read_csv(valid_path)
 # valid = valid[valid.columns.values[1:10]]
 # valid_input = np.expand_dims(valid, axis=-1)
 
-model = keras.models.load_model('../model/model.h5')
+model = tf.keras.models.load_model('../model/20200316.h5')
 
 model.summary()
 
