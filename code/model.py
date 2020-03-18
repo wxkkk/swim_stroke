@@ -45,6 +45,8 @@ model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
 # C4
 model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
 # model.add(MaxPool2D(3))
+# C5
+model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
 
 model.add(Flatten())
 # Fully-connected
