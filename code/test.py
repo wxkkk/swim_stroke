@@ -1,3 +1,6 @@
+import time
+import calendar
+
 import pandas as pd
 # from sklearn.preprocessing import LabelEncoder
 import keras
@@ -26,3 +29,5 @@ from utils import window_process
 # (train_images, train_labels), (test_images, test_labels) = fashion_data.load_data()
 # print(train_images, train_labels)
 
+print(time.localtime(time.time()))
+print(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
