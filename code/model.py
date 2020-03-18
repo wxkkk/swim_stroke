@@ -9,7 +9,8 @@ from utils import window_process
 
 cate_list = ['unknown', 'freestyle', 'breaststroke', 'butterfly', 'backstroke']
 
-train_path = r'../train_data/merged.csv'
+# train_path = r'../train_data/merged.csv'
+train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
 
 # train_file = pd.read_csv(train_path)
 # print(train_file.head())
@@ -28,7 +29,7 @@ train_path = r'../train_data/merged.csv'
 # train_data_df = pd.DataFrame(train_data)
 
 model = Sequential()
-input_shape = (120, 6, 1)
+input_shape = (90, 6, 1)
 # C1
 model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same', input_shape=input_shape))
 # model.add(MaxPool2D(3))
@@ -65,17 +66,18 @@ model.compile(optimizer='adam',
 # train_data = np_utils.to_categorical(train_data, 34)
 # print(train_data)
 
-model_path = '../model/20200316.h5'
+model_path = '../model/20200318_crossvalid.h5'
 cp_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=model_path,
     verbose=1,
-    # save_best_only=True,
-    period=10
+    save_best_only=True
 )
+
 model.fit(train_data,
           train_label,
-          batch_size=3000,
+          batch_size=500,
           callbacks=[cp_callback],
+          validation_split=0.25,
           epochs=1000)
 
 

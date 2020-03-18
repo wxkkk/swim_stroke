@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import h5py
 
-window_length = 120
+window_length = 90
 
 
 def window_data(path):
@@ -14,8 +14,8 @@ def window_data(path):
     for i in range(1, (len(data) // window_length) * 2):
         i *= window_length // 2
         # print(i)
-        data_wid_temp = data.loc[i:i + window_length - 1, ['1', '2', '3', '4', '5', '6']]
-        label_wid_temp = max(data.loc[i:i + window_length - 1, '0'])
+        data_wid_temp = data.loc[i:i + window_length - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0']]
+        label_wid_temp = max(data.loc[i:i + window_length - 1, '0'].astype(int))
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
