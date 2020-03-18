@@ -67,19 +67,23 @@ model.compile(optimizer='adam',
 # train_data = np_utils.to_categorical(train_data, 34)
 # print(train_data)
 
-model_path = '../model/20200318_{}.h5'.format(int(time.strftime('%Y%m%d%H%M', time.localtime(time.time()))))
+cur_time = int(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
+model_path = '../model/{}.h5'.format(cur_time)
+log_name = '{}'.format(cur_time)
 
-cp_callback = tf.keras.callbacks.ModelCheckpoint(
+model_saver = tf.keras.callbacks.ModelCheckpoint(
     filepath=model_path,
     verbose=1,
     save_best_only=True,
 )
 
+tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
+
 result = model.fit(train_data,
                    train_label,
                    batch_size=500,
-                   callbacks=[cp_callback],
-                   validation_split=0.25,
-                   epochs=2)
+                   callbacks=[model_saver, tensor_board],
+                   validation_split=0.3,
+                   epochs=5000)
 
 visulization_results.draw_result(result)
