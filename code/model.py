@@ -35,10 +35,12 @@ model = Sequential()
 input_shape = (90, 6, 1)
 # C1
 model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid', input_shape=input_shape))
-# model.add(MaxPool2D(3))
+model.add(MaxPool2D((3, 1)))
+model.add(Dropout(0.5))
 # C2
 model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid'))
-# model.add(MaxPool2D(3))
+model.add(MaxPool2D((3, 1)))
+model.add(Dropout(0.25))
 # C3
 # model.add(Conv2D(filters=6, kernel_size=3, activation='elu', padding='same'))
 # model.add(MaxPool2D(3))
@@ -48,7 +50,7 @@ model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid'))
 
 model.add(Flatten())
 # Fully-connected
-model.add(Dense(12, activation='relu'))
+model.add(Dense(128, activation='elu'))
 model.add(Dense(len(cate_list), activation='softmax'))
 model.summary()
 
@@ -80,7 +82,7 @@ model_saver = tf.keras.callbacks.ModelCheckpoint(
 early_stopper = tf.keras.callbacks.EarlyStopping(
     monitor='val_loss',
     min_delta=0,
-    patience=50,
+    patience=100,
     verbose=1,
     mode='min',
     baseline=None,
@@ -91,9 +93,9 @@ tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
 
 result = model.fit(train_data,
                    train_label,
-                   batch_size=500,
+                   batch_size=256,
                    callbacks=[model_saver, early_stopper, tensor_board],
-                   validation_split=0.1,
+                   validation_split=0.3,
                    epochs=5000)
 
 visulization_results.draw_result(result)
