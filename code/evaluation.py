@@ -7,16 +7,14 @@ from utils import window_process, visulization_results
 # input_path = r'../train_data/freestyle_team1_left_01.csv'
 
 # valid_path = r'../train_data/breaststroke_team1_left_61.csv'
-valid_path = r'../train_data/backstroke_team2_right_28.csv'
+valid_path = r'../train_data/breaststroke_team2_right_84.csv'
 # valid = pd.read_csv(valid_path)
 # valid = valid[valid.columns.values[1:10]]
 # valid_input = np.expand_dims(valid, axis=-1)
 
-model = tf.keras.models.load_model('../model/20200318_crossvalid.h5')
+model = tf.keras.models.load_model('../model/202003181848.h5')
 
 model.summary()
-
-visulization_results.draw_result(model)
 
 valid_input, train_label = window_process.process_data(valid_path)
 

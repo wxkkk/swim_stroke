@@ -34,19 +34,17 @@ train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/tra
 model = Sequential()
 input_shape = (90, 6, 1)
 # C1
-model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same', input_shape=input_shape))
+model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid', input_shape=input_shape))
 # model.add(MaxPool2D(3))
 # C2
-model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
+model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid'))
 # model.add(MaxPool2D(3))
 # C3
-model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
+# model.add(Conv2D(filters=6, kernel_size=3, activation='elu', padding='same'))
 # model.add(MaxPool2D(3))
 # C4
-model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
+# model.add(Conv2D(filters=6, kernel_size=3, activation='elu', padding='same'))
 # model.add(MaxPool2D(3))
-# C5
-model.add(Conv2D(filters=6, kernel_size=3, activation='relu', padding='same'))
 
 model.add(Flatten())
 # Fully-connected
@@ -76,7 +74,17 @@ log_name = '{}'.format(cur_time)
 model_saver = tf.keras.callbacks.ModelCheckpoint(
     filepath=model_path,
     verbose=1,
-    save_best_only=True,
+    save_best_only=True
+)
+
+early_stopper = tf.keras.callbacks.EarlyStopping(
+    monitor='val_loss',
+    min_delta=0,
+    patience=50,
+    verbose=1,
+    mode='min',
+    baseline=None,
+    restore_best_weights=True
 )
 
 tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
@@ -84,8 +92,8 @@ tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
 result = model.fit(train_data,
                    train_label,
                    batch_size=500,
-                   callbacks=[model_saver, tensor_board],
-                   validation_split=0.3,
+                   callbacks=[model_saver, early_stopper, tensor_board],
+                   validation_split=0.1,
                    epochs=5000)
 
 visulization_results.draw_result(result)
