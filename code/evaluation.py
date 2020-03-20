@@ -5,12 +5,12 @@ from utils import window_process, visulization_results
 # input_path = r'../train_data/freestyle_team1_left_01.csv'
 
 # valid_path = r'../train_data/breaststroke_team1_left_61.csv'
-valid_path = r'../data/valid_data/butterfly_team1_right_45.csv'
+valid_path = r'../data/valid_data/freestyle_team1_right_05.csv'
 # valid = pd.read_csv(valid_path)
 # valid = valid[valid.columns.values[1:10]]
 # valid_input = np.expand_dims(valid, axis=-1)
 
-model = tf.keras.models.load_model('../model/202003201738.h5')
+model = tf.keras.models.load_model('../model/202003201817.h5')
 
 model.summary()
 

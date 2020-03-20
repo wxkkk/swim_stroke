@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-window_length = 100
+window_length = 90
 
 
 def window_data(path, shuffle=True):

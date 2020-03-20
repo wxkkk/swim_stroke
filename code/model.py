@@ -11,7 +11,7 @@ cate_list = ['unknown', 'freestyle', 'breaststroke', 'butterfly', 'backstroke']
 train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
 
 model = Sequential()
-input_shape = (100, 6, 1)
+input_shape = (90, 6, 1)
 # C1
 model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
 model.add(BatchNormalization())

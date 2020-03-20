@@ -142,7 +142,7 @@ if __name__ == '__main__':
     # style_team_hand_00.csv
     # input_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
     # output_path = '../data/processed/train_1_V2/freestyle_team2_right_19.csv'
-    valid_path = r'../data/valid_data/freestyle_team1_left_01.csv'
+    valid_path = r'../data/valid_data/freestyle_team1_right_05.csv'
     #
     data = read_csv(valid_path)
     # clean option
