@@ -3,10 +3,10 @@ import numpy as np
 import cv2
 import h5py
 
-window_length = 90
+window_length = 100
 
 
-def window_data(path):
+def window_data(path, shuffle=True):
     data = pd.read_csv(path)
     data = data.dropna()
     data_wid = []
@@ -30,9 +30,11 @@ def window_data(path):
     # data_wid_list = np.hstack((data_wid, ))
 
     # shuffle 打乱
+    # print(label_wid)
     temp = np.array([data_wid, label_wid])
     temp = temp.transpose()
-    np.random.shuffle(temp)
+    if shuffle:
+        np.random.shuffle(temp)
 
     # 取出data、label
     data_list = list(temp[:, 0])
@@ -62,9 +64,9 @@ def to_np(list_1, list_2):
     return data_arr, label_arr
 
 
-def process_data(path):
+def process_data(path, shuffle=True):
 
-    list_1, list_2 = window_data(path)
+    list_1, list_2 = window_data(path, shuffle)
 
     data_arr, label_arr = to_np(list_1, list_2)
 
@@ -73,7 +75,7 @@ def process_data(path):
 
 # train_path = r'../train_data/merged.csv'
 #
-# input_path = r'../train_data/freestyle_team1_left_01.csv'
+# input_path = r'../data/valid_data/freestyle_team1_left_01.csv'
 #
 # d_a, l_a = process_data(input_path)
 #

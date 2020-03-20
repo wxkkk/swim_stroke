@@ -22,6 +22,9 @@ def show_plot_save(csv_file, out_path, header=False, style=0):
 
     labels, x, y, z = csv_file[0], csv_file[1], csv_file[2], csv_file[3]
 
+    # print(plt.style.available)
+    # plt.style.use('bmh')
+
     fig = plt.figure()
     # ax = fig.add_subplot(1, 1, 1)
     vertical_line = plt.axvline(x=0, color='purple', ls='--')
@@ -32,6 +35,7 @@ def show_plot_save(csv_file, out_path, header=False, style=0):
         _labels_line.set_xdata(_new_x)
         _labels_line.set_ydata([15 for _ in range(len(_new_x))])
         fig.canvas.draw_idle()
+
     if style == 1:
         labels_line = plt.plot([], [], 's', color='orange')[0]
     elif style == 2:
@@ -46,11 +50,47 @@ def show_plot_save(csv_file, out_path, header=False, style=0):
         if event.key == 'a' or event.key == 'd':
             try:
                 change_index = int(vertical_line.get_xdata())
-                labels[change_index: change_index + 10] = style if event.key == 'a' else 0
+                labels[change_index: change_index + 4] = style if event.key == 'a' else 0
                 # ax.lines.remove(ax.lines[-1])
             except (TypeError, Exception):
                 pass
             update_labels_line(labels_line, labels, style)
+        elif event.key == 'q' or event.key == 'e':
+            try:
+                cur_index = int(vertical_line.get_xdata())
+                move_len = -1 if event.key == 'q' else 1
+                vertical_line.set_xdata(cur_index + move_len)
+
+                if labels[cur_index] == style:
+                    head_index = cur_index
+                    rear_index = cur_index
+
+                    while labels[head_index] == style:
+                        head_index = head_index - 1
+                    head_index = head_index + 1
+
+                    while labels[rear_index] == style:
+                        rear_index = rear_index + 1
+
+                    labels[head_index: rear_index] = 0
+                    labels[head_index + move_len: rear_index + move_len] = style
+
+                update_labels_line(labels_line, labels, style)
+            except TypeError:
+                pass
+        elif event.key == 'left' or event.key == 'right':
+            try:
+                ax_temp = event.inaxes
+                x_min, x_max = ax_temp.get_xlim()
+                # delta = int((x_max - x_min) * 0.5) * (-1 if event.key == 'left' else 1)
+                delta = 5 * (-1 if event.key == 'left' else 1)
+                ax_temp.set(xlim=(x_min + delta, x_max + delta))
+                cur_index = int(vertical_line.get_xdata())
+                vertical_line.set_xdata(cur_index + delta)
+            except (TypeError, Exception):
+                pass
+            # update_labels_line(labels_line, labels)
+            fig.canvas.draw_idle()
 
     def on_scroll(event):
         try:
@@ -74,6 +114,8 @@ def show_plot_save(csv_file, out_path, header=False, style=0):
         except TypeError:
             pass
 
+    fig.canvas.mpl_disconnect(fig.canvas.manager.key_press_handler_id)
+
     fig.canvas.mpl_connect('scroll_event', on_scroll)
     fig.canvas.mpl_connect('motion_notify_event', motion)
     fig.canvas.mpl_connect('key_press_event', on_key_press)
@@ -96,17 +138,15 @@ if __name__ == '__main__':
     # 2:breaststroke
     # 3:butterfly
     # 4:backstroke
-    swim_style = 2
+    swim_style = 1
     # style_team_hand_00.csv
-    input_path = '../data/小米方表数据/二组/sns_log-044-右手/84.csv'
-    output_path = '../data/processed/train_1/breaststroke_team2_right_84.csv'
-    # input_path = '../data/小米方表数据/第四人肖定川男身高165体重60/仰泳1右手.csv'
-    # output_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
-
+    # input_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
+    # output_path = '../data/processed/train_1_V2/freestyle_team2_right_19.csv'
+    valid_path = r'../data/valid_data/freestyle_team1_left_01.csv'
     #
-    data = read_csv(input_path)
+    data = read_csv(valid_path)
     # clean option
-    clean_flag = True
+    clean_flag = False
     data = clean(data, clean_flag)
 
-    show_plot_save(data, output_path, clean_flag, swim_style)
+    show_plot_save(data, valid_path, clean_flag, swim_style)

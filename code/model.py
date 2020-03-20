@@ -29,24 +29,25 @@ train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/tra
 # print("train label:\n", train_label)
 # print(train_label.head())
 
-# train_data_df = pd.DataFrame(train_data)
+# train_data_df = pd.DataFram+e(train_data)
 
 model = Sequential()
-input_shape = (90, 6, 1)
+input_shape = (100, 6, 1)
 # C1
-model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid', input_shape=input_shape))
+model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
 model.add(MaxPool2D((3, 1)))
 model.add(Dropout(0.5))
 # C2
-model.add(Conv2D(filters=32, kernel_size=3, activation='elu', padding='valid'))
+model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid'))
 model.add(MaxPool2D((3, 1)))
 model.add(Dropout(0.25))
 # C3
-# model.add(Conv2D(filters=6, kernel_size=3, activation='elu', padding='same'))
-# model.add(MaxPool2D(3))
+model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid'))
+model.add(MaxPool2D((3, 1)))
+model.add(Dropout(0.25))
 # C4
-# model.add(Conv2D(filters=6, kernel_size=3, activation='elu', padding='same'))
-# model.add(MaxPool2D(3))
+# model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid'))
+# model.add(MaxPool2D((3, 1)))
 
 model.add(Flatten())
 # Fully-connected
@@ -93,9 +94,10 @@ tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
 
 result = model.fit(train_data,
                    train_label,
-                   batch_size=256,
+                   batch_size=128,
                    callbacks=[model_saver, early_stopper, tensor_board],
                    validation_split=0.3,
+                   verbose=2,
                    epochs=5000)
 
 visulization_results.draw_result(result)
