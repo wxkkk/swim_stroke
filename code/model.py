@@ -1,28 +1,30 @@
 import tensorflow as tf
 from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dropout, Dense
+from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dropout, Dense, BatchNormalization
 from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 import time
 from utils import window_process, visulization_results
 
 cate_list = ['unknown', 'freestyle', 'breaststroke', 'butterfly', 'backstroke']
 
-# train_path = r'../train_data/merged.csv'
 train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
 
 model = Sequential()
 input_shape = (100, 6, 1)
 # C1
-model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
+model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
+model.add(BatchNormalization())
 model.add(MaxPool2D((3, 1)))
 model.add(Dropout(0.5))
 # C2
-model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid'))
+model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
+model.add(BatchNormalization())
 model.add(MaxPool2D((3, 1)))
 model.add(Dropout(0.25))
 # C3
-model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='elu', padding='valid'))
+model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
+model.add(BatchNormalization())
 model.add(MaxPool2D((3, 1)))
 model.add(Dropout(0.25))
 # C4
@@ -50,13 +52,13 @@ cur_time = int(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
 model_path = '../model/{}.h5'.format(cur_time)
 log_name = '{}'.format(cur_time)
 
-model_saver = tf.keras.callbacks.ModelCheckpoint(
+model_saver = ModelCheckpoint(
     filepath=model_path,
     verbose=1,
     save_best_only=True
 )
 
-early_stopper = tf.keras.callbacks.EarlyStopping(
+early_stopper = EarlyStopping(
     monitor='val_loss',
     min_delta=0,
     patience=100,
