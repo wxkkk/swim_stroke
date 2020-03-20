@@ -1,12 +1,8 @@
 import tensorflow as tf
-import keras
-from tensorflow.keras import Model, Input, Sequential
-from tensorflow.keras.layers import Reshape, Conv1D, Conv2D, Activation, MaxPool2D, Flatten, Dropout, Dense, \
-    Convolution1D, GlobalAveragePooling1D
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dropout, Dense
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import TensorBoard
-import pandas as pd
-import numpy as np
 import time
 from utils import window_process, visulization_results
 
@@ -14,22 +10,6 @@ cate_list = ['unknown', 'freestyle', 'breaststroke', 'butterfly', 'backstroke']
 
 # train_path = r'../train_data/merged.csv'
 train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
-
-# train_file = pd.read_csv(train_path)
-# print(train_file.head())
-# print(train_file.columns.values[0:193])
-#
-# train_data = train_file[train_file.columns.values[1:10]]
-#
-# train_label = train_file[train_file.columns.values[10]].tolist()
-
-# train_file = pd.get_dummies(data=train_file, prefix='species')
-
-# print("train data:\n", train_data.describe())
-# print("train label:\n", train_label)
-# print(train_label.head())
-
-# train_data_df = pd.DataFram+e(train_data)
 
 model = Sequential()
 input_shape = (100, 6, 1)
@@ -59,16 +39,12 @@ model.summary()
 train_data, train_label = window_process.process_data(train_path)
 
 print('train_shape: ', train_data.shape)
-# train_data = tf.constant(train_data, shape=[22, 180, 6, 1])
-# train_data = np.expand_dims(train_data, axis=-1)
 train_label = to_categorical(train_label, len(cate_list))
 
 model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=[tf.keras.metrics.categorical_accuracy, 'mse'])
 
-# train_data = np_utils.to_categorical(train_data, 34)
-# print(train_data)
 
 cur_time = int(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
 model_path = '../model/{}.h5'.format(cur_time)

@@ -1,7 +1,4 @@
 import tensorflow as tf
-
-import pandas as pd
-import numpy as np
 from utils import window_process, visulization_results
 
 # input_path = r'../train_data/freestyle_team1_left_01.csv'
