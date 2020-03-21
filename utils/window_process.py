@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 
-window_length = 90
+window_length = 100
+feature_width = 6
 
 
 def window_data(path, shuffle=True):
@@ -12,7 +13,7 @@ def window_data(path, shuffle=True):
     for i in range(1, (len(data) // window_length) * 2):
         i *= window_length // 2
         # print(i)
-        data_wid_temp = data.loc[i:i + window_length - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0']]
+        data_wid_temp = data.loc[i:i + window_length - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0']]
         label_wid_temp = max(data.loc[i:i + window_length - 1, '0'].astype(int))
 
         data_wid.append(data_wid_temp)
@@ -43,11 +44,11 @@ def window_data(path, shuffle=True):
 
 def to_np(list_1, list_2):
 
-    data_arr = np.zeros((len(list_1), window_length, 6, 1), dtype=np.uint8)
+    data_arr = np.zeros((len(list_1), window_length, feature_width, 1), dtype=np.uint8)
     label_arr = np.zeros((len(list_2), 1), dtype=np.uint8)
 
     for n in range(len(data_arr)):
-        list_1[n] = np.resize(list_1[n], (window_length, 6, 1))
+        list_1[n] = np.resize(list_1[n], (window_length, feature_width, 1))
         list_2[n] = np.resize(list_2[n], 1)
         data_arr[n] = list_1[n]
         label_arr[n] = list_2[n]
