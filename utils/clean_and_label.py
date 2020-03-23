@@ -138,11 +138,11 @@ if __name__ == '__main__':
     # 2:breaststroke
     # 3:butterfly
     # 4:backstroke
-    swim_style = 1
+    swim_style = 4
     # style_team_hand_00.csv
     # input_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
     # output_path = '../data/processed/train_1_V2/freestyle_team2_right_19.csv'
-    valid_path = r'../data/valid_data/freestyle_team1_right_05.csv'
+    valid_path = r'../data/valid_data/backstroke_team1_left_21.csv'
     #
     data = read_csv(valid_path)
     # clean option

@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 
-window_length = 100
-feature_width = 6
+window_length = 90
+sensors_parameters = 9
+window_repetitive_rate = 0.4
 
 
 def window_data(path, shuffle=True):
@@ -10,8 +11,8 @@ def window_data(path, shuffle=True):
     data = data.dropna()
     data_wid = []
     label_wid = []
-    for i in range(1, (len(data) // window_length) * 2):
-        i *= window_length // 2
+    for i in range(1, int(len(data) // window_length // (1 - window_repetitive_rate))):
+        i *= int(window_length * (1 - window_repetitive_rate))
         # print(i)
         data_wid_temp = data.loc[i:i + window_length - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0']]
         label_wid_temp = max(data.loc[i:i + window_length - 1, '0'].astype(int))
@@ -44,11 +45,11 @@ def window_data(path, shuffle=True):
 
 def to_np(list_1, list_2):
 
-    data_arr = np.zeros((len(list_1), window_length, feature_width, 1), dtype=np.uint8)
+    data_arr = np.zeros((len(list_1), window_length, sensors_parameters, 1), dtype=np.uint8)
     label_arr = np.zeros((len(list_2), 1), dtype=np.uint8)
 
     for n in range(len(data_arr)):
-        list_1[n] = np.resize(list_1[n], (window_length, feature_width, 1))
+        list_1[n] = np.resize(list_1[n], (window_length, sensors_parameters, 1))
         list_2[n] = np.resize(list_2[n], 1)
         data_arr[n] = list_1[n]
         label_arr[n] = list_2[n]
@@ -78,7 +79,7 @@ def process_data(path, shuffle=True):
 #
 # d_a, l_a = process_data(input_path)
 #
-# print(len(d_a), l_a)
+# print(len(d_a), np.squeeze(l_a))
 
 #
 # print('data:\n', csv_file.loc[1130:1140, ['1', '2', '3', '4', '5', '6']])
