@@ -11,7 +11,7 @@ cate_list = ['unknown', 'freestyle', 'breaststroke', 'butterfly', 'backstroke']
 train_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
 
 model = Sequential()
-input_shape = (90, 9, 1)
+input_shape = (80, 9, 1)
 # C1
 model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
 model.add(BatchNormalization())
@@ -21,22 +21,23 @@ model.add(Dropout(0.5))
 model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
 model.add(BatchNormalization())
 model.add(MaxPool2D((3, 1)))
-model.add(Dropout(0.25))
+model.add(Dropout(0.5))
 # C3
 model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
 model.add(BatchNormalization())
 model.add(MaxPool2D((3, 1)))
-model.add(Dropout(0.25))
+model.add(Dropout(0.5))
 # C4
 # model.add(Conv2D(filters=64, kernel_size=(3, 1), activation='elu', padding='valid'))
 # model.add(BatchNormalization())
-# model.add(Dropout(0.25))
+# model.add(Dropout(0.5))
 
 model.add(Flatten())
 # Fully-connected
 model.add(Dense(128, activation='elu'))
-model.add(Dropout(0.25))
+model.add(Dropout(0.5))
 model.add(Dense(len(cate_list), activation='softmax'))
+
 model.summary()
 
 # train_label = np_utils.to_categorical(train_label, len(cate_list))
@@ -74,9 +75,9 @@ tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
 
 result = model.fit(train_data,
                    train_label,
-                   batch_size=64,
+                   batch_size=16,
                    callbacks=[model_saver, early_stopper, tensor_board],
-                   validation_split=0.3,
+                   validation_split=0.1,
                    verbose=2,
                    epochs=5000)
 

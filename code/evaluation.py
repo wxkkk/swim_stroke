@@ -7,11 +7,12 @@ from utils import window_process, visulization_results
 valid_path = r'../data/valid_data'
 valid_files = os.listdir(valid_path)
 
-model = tf.keras.models.load_model('../model/202003231738.h5')
+model = tf.keras.models.load_model('../model/202003241537.h5')
 
 model.summary()
 
 for i, f in enumerate(valid_files):
+    print('\n')
     print(f)
     f = os.path.join(valid_path, f)
     valid_input, train_label = window_process.process_data(f, False)
@@ -25,7 +26,6 @@ for i, f in enumerate(valid_files):
           'predicted count: ', len(predicted_results_class) - sum(predicted_results_class == 0))
     print('Truth label:     ', train_label)
     print('Predicted label: ', predicted_results_class)
-    print('\n')
 
 # valid[10] = predicted_results
 

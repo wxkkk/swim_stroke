@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-window_length = 90
+window_length = 80
 sensors_parameters = 9
 window_repetitive_rate = 0.4
 
