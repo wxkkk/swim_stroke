@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -18,9 +19,32 @@ def clean(csv_file, flag=False):
     return csv_file
 
 
-def show_plot_save(csv_file, out_path, header=False, style=0):
+def read_txt(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        lines_len = len(lines)
+        x = np.zeros(shape=(lines_len, 9))
+        y = np.zeros(shape=(lines_len,))
 
-    labels, x, y, z = csv_file[0], csv_file[1], csv_file[2], csv_file[3]
+        for i in range(lines_len):
+            ns = lines[i][lines[i].find('[')+1: lines[i].find(']')].split(',')
+            for j in range(9):
+                x[i, j] = float(ns[j])
+            y[i] = int(ns[9])
+
+    return x, y
+
+
+def show_plot_save(file_path, out_path, file_type, header=False, style=0):
+
+    if file_type == 'csv':
+        data = read_csv(file_path)
+        data = clean(data, clean_flag)
+        labels, x, y, z = data[0], data[1], data[2], data[3]
+    if file_type == 'txt':
+        data, labels = read_txt(file_path)
+        temp = data.T
+        x, y, z = temp[0], temp[1], temp[2]
 
     # print(plt.style.available)
     # plt.style.use('bmh')
@@ -128,7 +152,23 @@ def show_plot_save(csv_file, out_path, header=False, style=0):
     plt.legend()
     plt.show()
 
-    csv_file.to_csv(out_path, index=False, header=header)
+    if file_type == 'csv':
+        data.to_csv(out_path, index=False, header=header)
+    if file_type == 'txt':
+        with open(out_path, 'w', encoding='utf-8') as f:
+            rewrite_lines = []
+            for _ in range(len(data)):
+                rewrite_lines.append('[%f, %f, %f, %f, %f, %f, %f, %f, %f, %d]\n' % (data[_][0],
+                                                                                     data[_][1],
+                                                                                     data[_][2],
+                                                                                     data[_][3],
+                                                                                     data[_][4],
+                                                                                     data[_][5],
+                                                                                     data[_][6],
+                                                                                     data[_][7],
+                                                                                     data[_][8],
+                                                                                     labels[_]))
+            f.writelines(rewrite_lines)
 
 
 if __name__ == '__main__':
@@ -143,10 +183,10 @@ if __name__ == '__main__':
     # input_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
     # output_path = '../data/processed/train_1_V2/freestyle_team2_right_19.csv'
     valid_path = r'../data/valid_data/backstroke_team1_left_21.csv'
+    valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\train_2\自由泳_右手1_张前.txt'
     #
-    data = read_csv(valid_path)
     # clean option
     clean_flag = False
-    data = clean(data, clean_flag)
+    file_type = ['csv', 'txt']
 
-    show_plot_save(data, valid_path, clean_flag, swim_style)
+    show_plot_save(valid_path_txt, valid_path_txt, file_type[1], clean_flag, style=swim_style)

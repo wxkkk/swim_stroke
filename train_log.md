@@ -170,7 +170,7 @@ validation loss from first time 30.xx% reduced to 17.xx after one week optimisin
     maxpooling 3*1, 3*1, 3*1
     dropout 0.5, 0.5, 0.25, 0.25
     padding valid, valid, valid
-    dense 128~~~~~~~~
+    dense 128
     batch 16
     valid split 0.1
 ---------------------

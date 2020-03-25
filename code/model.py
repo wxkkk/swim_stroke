@@ -14,7 +14,7 @@ train_path_txt = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed
 train_path = [train_path_csv, train_path_txt]
 
 
-def buil_model():
+def build_model():
     model = Sequential()
     input_shape = (80, 6, 1)
     # C1
@@ -49,12 +49,10 @@ def buil_model():
 
 
 if __name__ == '__main__':
-    model = buil_model()
-    # train_label = np_utils.to_categorical(train_label, len(cate_list))
+    model = build_model()
     train_data, train_label = window_process.process_data_merge_txt_csv(train_path, merge_txt_csv=True)
-
-    print('train_shape: ', train_data.shape)
     train_label = to_categorical(train_label, len(cate_list))
+    print('train_shape: ', train_data.shape)
 
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',

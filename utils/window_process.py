@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 window_length = 80
-sensors_parameters = 9
+sensors_parameters = 6
 window_repetitive_rate = 0.4
 
 
@@ -86,7 +86,7 @@ def to_np(list_1, list_2):
     return data_arr, label_arr
 
 
-def process_data_merge_txt_csv(path, shuffle=True, merge_txt_csv=False):
+def process_data_merge_txt_csv(path, shuffle=True, merge_txt_csv=True):
 
     list_csv_1, list_csv_2 = window_data_csv(path[0], shuffle)
 
@@ -96,7 +96,7 @@ def process_data_merge_txt_csv(path, shuffle=True, merge_txt_csv=False):
         list_csv_1.extend(list_txt_1)
         list_csv_2.extend(list_txt_2)
 
-    data_arr, label_arr = to_np(list_txt_1, list_txt_2)
+    data_arr, label_arr = to_np(list_csv_1, list_csv_2)
 
     return data_arr, label_arr
 
