@@ -156,3 +156,21 @@ validation loss from first time 30.xx% reduced to 17.xx after one week optimisin
     batch 16
     valid split 0.1
 ---------------------
+
+---------------------
+202003241834 good+
+    train 95.48% valid 95.98%
+    train_loss 0.1265 valid_loss 0.1484
+    recall 0.9508 valid_recall 0.9566
+    shape (80, 9, 1)
+    repetitive rate 40%
+    3 conv 
+    batchnormalization *3
+    filters 32, 32, 32
+    maxpooling 3*1, 3*1, 3*1
+    dropout 0.5, 0.5, 0.25, 0.25
+    padding valid, valid, valid
+    dense 128~~~~~~~~
+    batch 16
+    valid split 0.1
+---------------------

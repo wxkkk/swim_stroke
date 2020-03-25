@@ -4,18 +4,19 @@ import os
 from utils import window_process, visulization_results
 
 # valid_path = r'../train_data/breaststroke_team1_left_61.csv'
-valid_path = r'../data/valid_data'
-valid_files = os.listdir(valid_path)
+valid_path_csv = r'../data/valid_data'
+valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\test'
+valid_files = os.listdir(valid_path_txt)
 
-model = tf.keras.models.load_model('../model/202003241537.h5')
+model = tf.keras.models.load_model('../model/202003241834.h5')
 
 model.summary()
 
 for i, f in enumerate(valid_files):
     print('\n')
     print(f)
-    f = os.path.join(valid_path, f)
-    valid_input, train_label = window_process.process_data(f, False)
+    f = os.path.join(valid_path_txt, f)
+    valid_input, train_label = window_process.process_data_txt(f, shuffle=False)
 
     predicted_results_class = model.predict_classes(valid_input)
 

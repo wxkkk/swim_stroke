@@ -6,7 +6,43 @@ sensors_parameters = 9
 window_repetitive_rate = 0.4
 
 
-def window_data(path, shuffle=True):
+def window_data_txt(path, shuffle=False):
+    with open(path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        lines_len = len(lines)
+        x = np.zeros(shape=(lines_len, 9))
+        y = np.zeros(shape=(lines_len,))
+
+        for i in range(lines_len):
+            ns = lines[i][lines[i].find('[')+1: lines[i].find(']')].split(',')
+            # input number of sensor parameters
+            for j in range(sensors_parameters - 1):
+                x[i, j] = float(ns[j])
+            y[i] = int(ns[9])
+
+    data_wid = []
+    label_wid = []
+    for i in range(1, int(len(x) // window_length // (1 - window_repetitive_rate))):
+        i *= int(window_length * (1 - window_repetitive_rate))
+        # print(i)
+        data_wid_temp = x[i:i + window_length - 1]
+        label_wid_temp = max(y[i:i + window_length - 1].astype(int))
+
+        data_wid.append(data_wid_temp)
+        label_wid.append(label_wid_temp)
+    # shuffle
+    temp = np.array([data_wid, label_wid])
+    temp = temp.transpose()
+    if shuffle:
+        np.random.shuffle(temp)
+
+    data_list = list(temp[:, 0])
+    label_list = list(temp[:, 1])
+
+    return data_list, label_list
+
+
+def window_data_csv(path, shuffle=True):
     data = pd.read_csv(path)
     data = data.dropna()
     data_wid = []
@@ -19,24 +55,17 @@ def window_data(path, shuffle=True):
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
-        # data_wid.append(data.loc[i:i + 179, ['1', '2', '3', '4', '5', '6']])
-        # label_wid.append(max(data.loc[i:i + 179, '0']))
-        # print('data:\n', data_wid)
-        # print('label:\n', label_wid)
-        # print(i)
-        # np.save()
 
     # 组合list
     # data_wid_list = np.hstack((data_wid, ))
 
-    # shuffle 打乱
-    # print(label_wid)
+    # shuffle
     temp = np.array([data_wid, label_wid])
     temp = temp.transpose()
     if shuffle:
         np.random.shuffle(temp)
 
-    # 取出data、label
+    # get data, label
     data_list = list(temp[:, 0])
     label_list = list(temp[:, 1])
 
@@ -53,42 +82,53 @@ def to_np(list_1, list_2):
         list_2[n] = np.resize(list_2[n], 1)
         data_arr[n] = list_1[n]
         label_arr[n] = list_2[n]
-    # print(label_arr)
-    # print(data_arr[0][0])
-    # print(len(data_list), len(label_list))
-    # data_arr, label_arr = np.array(list_1), np.array(list_2)
-    # print(data_arr)
-    # print(label_arr)
-    # print(data_arr.shape, label_arr.shape)
 
     return data_arr, label_arr
 
 
-def process_data(path, shuffle=True):
+def process_data_merge_txt_csv(path, shuffle=True, merge_txt_csv=False):
 
-    list_1, list_2 = window_data(path, shuffle)
+    list_csv_1, list_csv_2 = window_data_csv(path[0], shuffle)
+
+    list_txt_1, list_txt_2 = window_data_txt(path[1], shuffle)
+
+    if merge_txt_csv:
+        list_csv_1.extend(list_txt_1)
+        list_csv_2.extend(list_txt_2)
+
+    data_arr, label_arr = to_np(list_txt_1, list_txt_2)
+
+    return data_arr, label_arr
+
+
+def process_data_txt(path, shuffle=True):
+
+    list_1, list_2 = window_data_txt(path, shuffle)
 
     data_arr, label_arr = to_np(list_1, list_2)
 
     return data_arr, label_arr
 
 
-# train_path = r'../train_data/merged.csv'
+def process_data_csv(path, shuffle=True):
+
+    list_1, list_2 = window_data_csv(path, shuffle)
+
+    data_arr, label_arr = to_np(list_1, list_2)
+
+    return data_arr, label_arr
+
+# test_csv_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
 #
-# input_path = r'../data/valid_data/freestyle_team1_left_01.csv'
-#
-# d_a, l_a = process_data(input_path)
+# test_txt_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_2.txt'
+# #
+# test_path = [test_csv_path, test_txt_path]
+# #
+# d_a, l_a = process_data(test_path, merge_txt_csv=True)
 #
 # print(len(d_a), np.squeeze(l_a))
 
-#
-# print('data:\n', csv_file.loc[1130:1140, ['1', '2', '3', '4', '5', '6']])
-#
-# print('label:\n', csv_file.loc[1130:1140, '0'])
-#
-# print(len(csv_file) // 180)
-#
-# print(window_data(input_path))
+
 
 
 
