@@ -174,3 +174,10 @@ validation loss from first time 30.xx% reduced to 17.xx after one week optimisin
     batch 16
     valid split 0.1
 ---------------------
+the following model were using train_1_V2 and train_2 training
+
+---------------------
+202003261234 
+    valid 84.01%
+
+

@@ -18,17 +18,17 @@ def build_model():
     model = Sequential()
     input_shape = (80, 6, 1)
     # C1
-    model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
+    model.add(Conv2D(filters=256, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=input_shape))
     model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
     model.add(Dropout(0.5))
     # C2
-    model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
+    model.add(Conv2D(filters=256, kernel_size=(3, 1), activation='elu', padding='valid'))
     model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
     model.add(Dropout(0.5))
     # C3
-    model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
+    model.add(Conv2D(filters=256, kernel_size=(3, 1), activation='elu', padding='valid'))
     model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
     model.add(Dropout(0.25))
@@ -39,7 +39,7 @@ def build_model():
 
     model.add(Flatten())
     # Fully-connected
-    model.add(Dense(128, activation='elu'))
+    model.add(Dense(256, activation='elu'))
     model.add(Dropout(0.25))
     model.add(Dense(len(cate_list), activation='softmax'))
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
     result = model.fit(train_data,
                        train_label,
-                       batch_size=16,
+                       batch_size=128,
                        callbacks=[model_saver, early_stopper, tensor_board],
                        validation_split=0.1,
                        verbose=2,

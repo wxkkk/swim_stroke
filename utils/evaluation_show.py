@@ -1,27 +1,28 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import window_process, clean_label_show
 
 window_length = 80
-window_repetitive_rate = 0.4
+window_repetitive_rate = 0.3
 
 
-def show_plot(file_path, out_path, file_type, predicted_labels, header=False, style=0):
+def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
 
     # if file_type == 'csv':
     #     data = read_csv(file_path)
     #     data = clean(data, clean_flag)
     #     labels, x, y, z = data[0], data[1], data[2], data[3]
-    if file_type == 'predicted_txt':
+    if os.path.splitext(file_path)[-1] == '.txt':
         data, labels = clean_label_show.read_txt(file_path)
         temp = data.T
         x, y, z = temp[0], temp[1], temp[2]
 
         predicted_labels_total = np.zeros(shape=len(data))
-        for i in range(int(len(data) // window_length // (1 - window_repetitive_rate))):
+        for i in range(1, int(len(data) // window_length // (1 - window_repetitive_rate))):
             # print(i * window_length * (1 - window_repetitive_rate) + window_length)
-            predicted_labels_total[int(i * window_length * (1 - window_repetitive_rate)) + window_length] = predicted_labels[i - 1]
+            predicted_labels_total[int(i * window_length * (1 - window_repetitive_rate))] = predicted_labels[i - 1]
 
     # print(plt.style.available)
     # plt.style.use('bmh')
@@ -31,27 +32,32 @@ def show_plot(file_path, out_path, file_type, predicted_labels, header=False, st
     vertical_line = plt.axvline(x=0, color='purple', ls='--')
     horizontal_line = plt.axhline(y=0, color='purple', ls='--')
 
-    def update_labels_line(_labels_line, _labels, style, predicted_labels_total):
+    def update_labels_line(_labels_line, _labels, style, predicted_lines, predicted_labels_total):
         _new_x = [i for i in range(len(_labels)) if _labels[i] == style]
         _labels_line.set_xdata(_new_x)
         _labels_line.set_ydata([15 for _ in range(len(_new_x))])
+        fig.canvas.draw_idle()
 
         _new_y = [i for i in range(len(predicted_labels_total)) if predicted_labels_total[i] == style]
-        _labels_line.set_xdata(_new_y)
-        _labels_line.set_ydata([20 for _ in range(len(_new_y))])
+        predicted_lines.set_xdata(_new_y)
+        predicted_lines.set_ydata([20 for _ in range(len(_new_y))])
         fig.canvas.draw_idle()
 
     labels_line = plt.plot([], [], 's', color='orange')[0]
-    update_labels_line(labels_line, labels, 1, predicted_labels_total)
+    predicted_line = plt.plot([], [], 's', color='orange')[0]
+    update_labels_line(labels_line, labels, 1, predicted_line, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='blue')[0]
-    update_labels_line(labels_line, labels, 2, predicted_labels_total)
+    predicted_line = plt.plot([], [], 's', color='blue')[0]
+    update_labels_line(labels_line, labels, 2, predicted_line, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='purple')[0]
-    update_labels_line(labels_line, labels, 3, predicted_labels_total)
+    predicted_line = plt.plot([], [], 's', color='purple')[0]
+    update_labels_line(labels_line, labels, 3, predicted_line, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='slategrey')[0]
-    update_labels_line(labels_line, labels, 4, predicted_labels_total)
+    predicted_line = plt.plot([], [], 's', color='slategrey')[0]
+    update_labels_line(labels_line, labels, 4, predicted_line, predicted_labels_total)
 
     def on_key_press(event):
         if event.key == 'a' or event.key == 'd':
@@ -135,9 +141,9 @@ def show_plot(file_path, out_path, file_type, predicted_labels, header=False, st
     plt.legend()
     plt.show()
 
-    if file_type == 'csv':
+    if os.path.splitext(file_path)[-1] == '.csv':
         data.to_csv(out_path, index=False, header=header)
-    if file_type == 'txt':
+    if os.path.splitext(file_path)[-1] == '.txt':
         with open(out_path, 'w', encoding='utf-8') as f:
             rewrite_lines = []
             for _ in range(len(data)):
