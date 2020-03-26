@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 window_length = 80
-sensors_parameters = 6
+sensors_parameters = 9
 window_repetitive_rate = 0.4
 
 
@@ -22,7 +22,7 @@ def window_data_txt(path, shuffle=False):
 
     data_wid = []
     label_wid = []
-    for i in range(1, int(len(x) // window_length // (1 - window_repetitive_rate))):
+    for i in range(int(len(x) // window_length // (1 - window_repetitive_rate))):
         i *= int(window_length * (1 - window_repetitive_rate))
         # print(i)
         data_wid_temp = x[i:i + window_length - 1]
@@ -47,7 +47,7 @@ def window_data_csv(path, shuffle=True):
     data = data.dropna()
     data_wid = []
     label_wid = []
-    for i in range(1, int(len(data) // window_length // (1 - window_repetitive_rate))):
+    for i in range(int(len(data) // window_length // (1 - window_repetitive_rate))):
         i *= int(window_length * (1 - window_repetitive_rate))
         # print(i)
         data_wid_temp = data.loc[i:i + window_length - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0']]
@@ -124,7 +124,8 @@ def process_data_csv(path, shuffle=True):
 # #
 # test_path = [test_csv_path, test_txt_path]
 # #
-# d_a, l_a = process_data(test_path, merge_txt_csv=True)
+
+# d_a, l_a = process_data_csv(test_csv_path, False)
 #
 # print(len(d_a), np.squeeze(l_a))
 

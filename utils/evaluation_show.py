@@ -1,50 +1,27 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from utils import window_process, clean_label_show
+
+window_length = 80
+window_repetitive_rate = 0.4
 
 
-def read_csv(path):
-    csv_file = pd.read_csv(path, header=None)
-    return csv_file
+def show_plot(file_path, out_path, file_type, predicted_labels, header=False, style=0):
 
-
-def clean(csv_file, flag=False):
-    if flag:
-        # 取10列
-        csv_file = csv_file[csv_file.columns.values[0:10]]
-        # label 列置零
-        csv_file[csv_file.columns.values[0]] = 0
-        print(csv_file.columns.values)
-
-    return csv_file
-
-
-def read_txt(path):
-    with open(path, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-        lines_len = len(lines)
-        x = np.zeros(shape=(lines_len, 9))
-        y = np.zeros(shape=(lines_len,))
-
-        for i in range(lines_len):
-            ns = lines[i][lines[i].find('[')+1: lines[i].find(']')].split(',')
-            for j in range(9):
-                x[i, j] = float(ns[j])
-            y[i] = int(ns[9])
-
-    return x, y
-
-
-def show_plot_save(file_path, out_path, file_type, header=False, style=0):
-
-    if file_type == 'csv':
-        data = read_csv(file_path)
-        data = clean(data, clean_flag)
-        labels, x, y, z = data[0], data[1], data[2], data[3]
-    if file_type == 'txt':
-        data, labels = read_txt(file_path)
+    # if file_type == 'csv':
+    #     data = read_csv(file_path)
+    #     data = clean(data, clean_flag)
+    #     labels, x, y, z = data[0], data[1], data[2], data[3]
+    if file_type == 'predicted_txt':
+        data, labels = clean_label_show.read_txt(file_path)
         temp = data.T
         x, y, z = temp[0], temp[1], temp[2]
+
+        predicted_labels_total = np.zeros(shape=len(data))
+        for i in range(int(len(data) // window_length // (1 - window_repetitive_rate))):
+            # print(i * window_length * (1 - window_repetitive_rate) + window_length)
+            predicted_labels_total[int(i * window_length * (1 - window_repetitive_rate)) + window_length] = predicted_labels[i - 1]
 
     # print(plt.style.available)
     # plt.style.use('bmh')
@@ -54,23 +31,27 @@ def show_plot_save(file_path, out_path, file_type, header=False, style=0):
     vertical_line = plt.axvline(x=0, color='purple', ls='--')
     horizontal_line = plt.axhline(y=0, color='purple', ls='--')
 
-    def update_labels_line(_labels_line, _labels, style):
+    def update_labels_line(_labels_line, _labels, style, predicted_labels_total):
         _new_x = [i for i in range(len(_labels)) if _labels[i] == style]
         _labels_line.set_xdata(_new_x)
         _labels_line.set_ydata([15 for _ in range(len(_new_x))])
+
+        _new_y = [i for i in range(len(predicted_labels_total)) if predicted_labels_total[i] == style]
+        _labels_line.set_xdata(_new_y)
+        _labels_line.set_ydata([20 for _ in range(len(_new_y))])
         fig.canvas.draw_idle()
 
     labels_line = plt.plot([], [], 's', color='orange')[0]
-    update_labels_line(labels_line, labels, 1)
+    update_labels_line(labels_line, labels, 1, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='blue')[0]
-    update_labels_line(labels_line, labels, 2)
+    update_labels_line(labels_line, labels, 2, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='purple')[0]
-    update_labels_line(labels_line, labels, 3)
+    update_labels_line(labels_line, labels, 3, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='slategrey')[0]
-    update_labels_line(labels_line, labels, 4)
+    update_labels_line(labels_line, labels, 4, predicted_labels_total)
 
     def on_key_press(event):
         if event.key == 'a' or event.key == 'd':
@@ -80,30 +61,28 @@ def show_plot_save(file_path, out_path, file_type, header=False, style=0):
                 # ax.lines.remove(ax.lines[-1])
             except (TypeError, Exception):
                 pass
-            for s_i in range(5):
-                update_labels_line(labels_line, labels, s_i)
+            update_labels_line(labels_line, labels, style)
         elif event.key == 'q' or event.key == 'e':
             try:
                 cur_index = int(vertical_line.get_xdata())
                 move_len = -1 if event.key == 'q' else 1
                 vertical_line.set_xdata(cur_index + move_len)
 
-                if labels[cur_index] > 0:
+                if labels[cur_index] == style:
                     head_index = cur_index
                     rear_index = cur_index
 
-                    while labels[head_index] > 0:
+                    while labels[head_index] == style:
                         head_index = head_index - 1
                     head_index = head_index + 1
 
-                    while labels[rear_index] > 0:
+                    while labels[rear_index] == style:
                         rear_index = rear_index + 1
 
                     labels[head_index: rear_index] = 0
                     labels[head_index + move_len: rear_index + move_len] = style
 
-                for s_i in range(5):
-                    update_labels_line(labels_line, labels, s_i)
+                update_labels_line(labels_line, labels, style)
             except TypeError:
                 pass
         elif event.key == 'left' or event.key == 'right':
@@ -173,24 +152,3 @@ def show_plot_save(file_path, out_path, file_type, header=False, style=0):
                                                                                      data[_][8],
                                                                                      labels[_]))
             f.writelines(rewrite_lines)
-
-
-if __name__ == '__main__':
-
-    # 0:unknown
-    # 1:freestyle
-    # 2:breaststroke
-    # 3:butterfly
-    # 4:backstroke
-    swim_style = 4
-    # style_team_hand_00.csv
-    # input_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
-    # output_path = '../data/processed/train_1_V2/freestyle_team2_right_19.csv'
-    valid_path = r'../data/valid_data/backstroke_team1_left_21.csv'
-    valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\train_2\自由泳_右手1_张前.txt'
-    #
-    # clean option
-    clean_flag = False
-    file_type = ['csv', 'txt']
-
-    show_plot_save(valid_path_txt, valid_path_txt, file_type[1], clean_flag, style=swim_style)

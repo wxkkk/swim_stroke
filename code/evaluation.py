@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import os
-from utils import window_process, visulization_results
+from utils import window_process, visulization_results, evaluation_show
 
 # valid_path = r'../train_data/breaststroke_team1_left_61.csv'
 valid_path_csv = r'../data/valid_data'
@@ -19,6 +19,9 @@ for i, f in enumerate(valid_files):
     valid_input, train_label = window_process.process_data_txt(f, shuffle=False)
 
     predicted_results_class = model.predict_classes(valid_input)
+    print(type(predicted_results_class))
+    # visuliazation predicted
+    evaluation_show.show_plot(f, f, 'predicted_txt', predicted_results_class)
 
     # predicted_results = model.predict(valid_input)
     # predicted_results = np.argmax(predicted_results, axis=-1)
