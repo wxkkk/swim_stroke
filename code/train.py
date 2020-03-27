@@ -2,8 +2,8 @@ import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 import time
-import visulization_results
-import window_process
+import train_result_plot
+import raw_data_to_window
 import model
 import constants
 import np_to_h5
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     early_stopper = EarlyStopping(
         monitor='val_loss',
         min_delta=0,
-        patience=100,
+        patience=50,
         verbose=2,
         mode='min',
         baseline=None,
@@ -53,4 +53,4 @@ if __name__ == '__main__':
                        verbose=2,
                        epochs=5000)
 
-    visulization_results.draw_result(result)
+    train_result_plot.draw_result(result)

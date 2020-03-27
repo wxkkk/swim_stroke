@@ -28,7 +28,7 @@ def build_model():
 
     model.add(Flatten())
     # Fully-connected
-    model.add(Dense(1024, activation='elu'))
+    model.add(Dense(512, activation='elu'))
     model.add(Dropout(0.5))
     model.add(Dense(len(constants.CATE_LIST), activation='softmax'))
 

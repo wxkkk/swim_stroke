@@ -1,10 +1,10 @@
 import numpy as np
 import h5py
-import window_process
+import raw_data_to_window
 
 
 def process_data_to_np(path):
-    d_a, l_a = window_process.process_data_merge_txt_csv(path, merge_txt_csv=True)
+    d_a, l_a = raw_data_to_window.process_data_merge_txt_csv(path, merge_txt_csv=True)
     print(len(d_a), np.squeeze(l_a))
 
     return d_a, l_a
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     h5_path = '../../data/train_data/train_set.h5'
 
-    train_data, train_label = process_data_to_np(merge_path)
-    save_h5(train_data, train_label, h5_path)
+    # train_data, train_label = process_data_to_np(merge_path)
+    # save_h5(train_data, train_label, h5_path)
     train_data, train_label = read_h5(h5_path)
     print(train_data.shape, train_label.shape)

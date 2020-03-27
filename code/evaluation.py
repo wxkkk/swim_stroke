@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import os
-import window_process
+import raw_data_to_window
 import evaluation_show
 
 valid_path_csv = r'../data/valid_data'
@@ -16,7 +16,7 @@ for i, f in enumerate(valid_files):
     print('\n')
     print(f)
     f = os.path.join(valid_path_txt, f)
-    valid_input, train_label = window_process.process_data_txt(f, shuffle=False)
+    valid_input, train_label = raw_data_to_window.process_data_txt(f, shuffle=False)
 
     predicted_results_class = model.predict_classes(valid_input)
 

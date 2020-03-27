@@ -7,10 +7,15 @@ import constants
 
 def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
 
-    # if file_type == 'csv':
-    #     data = read_csv(file_path)
-    #     data = clean(data, clean_flag)
+    # if os.path.splitext(file_path)[-1] == '.csv':
+    #     data = clean_label_show.read_csv(file_path)
     #     labels, x, y, z = data[0], data[1], data[2], data[3]
+    #
+    #     predicted_labels_total = np.zeros(shape=len(data))
+    #     for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
+    #         # print(i * window_length * (1 - window_repetitive_rate) + window_length)
+    #         predicted_labels_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = predicted_labels[i - 1]
+
     if os.path.splitext(file_path)[-1] == '.txt':
         data, labels = clean_label_show.read_txt(file_path)
         temp = data.T

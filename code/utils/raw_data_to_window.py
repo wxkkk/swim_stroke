@@ -3,7 +3,7 @@ import numpy as np
 import constants
 
 
-def window_data_txt(path, shuffle=False):
+def window_data_txt(path):
     with open(path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         lines_len = len(lines)
@@ -27,19 +27,11 @@ def window_data_txt(path, shuffle=False):
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
-    # shuffle
-    temp = np.array([data_wid, label_wid])
-    temp = temp.transpose()
-    if shuffle:
-        np.random.shuffle(temp)
 
-    data_list = list(temp[:, 0])
-    label_list = list(temp[:, 1])
-
-    return data_list, label_list
+    return data_wid, label_wid
 
 
-def window_data_csv(path, shuffle=True):
+def window_data_csv(path):
     data = pd.read_csv(path)
     data = data.dropna()
     data_wid = []
@@ -52,6 +44,11 @@ def window_data_csv(path, shuffle=True):
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
+
+    return data_wid, label_wid
+
+
+def to_np(data_wid, label_wid, shuffle=True):
 
     # 组合list
     # data_wid_list = np.hstack((data_wid, ))
@@ -66,52 +63,45 @@ def window_data_csv(path, shuffle=True):
     data_list = list(temp[:, 0])
     label_list = list(temp[:, 1])
 
-    return data_list, label_list
-
-
-def to_np(list_1, list_2):
-
-    data_arr = np.zeros((len(list_1), constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1), dtype=np.uint8)
-    label_arr = np.zeros((len(list_2), 1), dtype=np.uint8)
+    data_arr = np.zeros((len(data_list), constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1), dtype=np.uint8)
+    label_arr = np.zeros((len(label_list), 1), dtype=np.uint8)
 
     for n in range(len(data_arr)):
-        list_1[n] = np.resize(list_1[n], (constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1))
-        list_2[n] = np.resize(list_2[n], 1)
-        data_arr[n] = list_1[n]
-        label_arr[n] = list_2[n]
+        data_arr[n] = np.resize(data_list[n], (constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1))
+        label_arr[n] = np.resize(label_list[n], 1)
 
     return data_arr, label_arr
 
 
 def process_data_merge_txt_csv(path, shuffle=True, merge_txt_csv=True):
 
-    list_csv_1, list_csv_2 = window_data_csv(path[0], shuffle)
+    list_csv_1, list_csv_2 = window_data_csv(path[0])
 
-    list_txt_1, list_txt_2 = window_data_txt(path[1], shuffle)
+    list_txt_1, list_txt_2 = window_data_txt(path[1])
 
     if merge_txt_csv:
         list_csv_1.extend(list_txt_1)
         list_csv_2.extend(list_txt_2)
 
-    data_arr, label_arr = to_np(list_csv_1, list_csv_2)
+    data_arr, label_arr = to_np(list_csv_1, list_csv_2, shuffle)
 
     return data_arr, label_arr
 
 
 def process_data_txt(path, shuffle=True):
 
-    list_1, list_2 = window_data_txt(path, shuffle)
+    list_1, list_2 = window_data_txt(path)
 
-    data_arr, label_arr = to_np(list_1, list_2)
+    data_arr, label_arr = to_np(list_1, list_2, shuffle)
 
     return data_arr, label_arr
 
 
 def process_data_csv(path, shuffle=True):
 
-    list_1, list_2 = window_data_csv(path, shuffle)
+    list_1, list_2 = window_data_csv(path)
 
-    data_arr, label_arr = to_np(list_1, list_2)
+    data_arr, label_arr = to_np(list_1, list_2, shuffle)
 
     return data_arr, label_arr
 
@@ -122,7 +112,7 @@ if __name__ == '__main__':
 
     train_path = [train_path_csv, train_path_txt]
     
-    d_a, l_a = process_data_csv(train_path, True)
+    d_a, l_a = process_data_merge_txt_csv(train_path, True)
 
     print(len(d_a), np.squeeze(l_a))
 

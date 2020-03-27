@@ -8,17 +8,6 @@ def read_csv(path):
     return csv_file
 
 
-def clean(csv_file, flag=False):
-    if flag:
-        # 取10列
-        csv_file = csv_file[csv_file.columns.values[0:10]]
-        # label 列置零
-        csv_file[csv_file.columns.values[0]] = 0
-        print(csv_file.columns.values)
-
-    return csv_file
-
-
 def read_txt(path):
     with open(path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -33,6 +22,17 @@ def read_txt(path):
             y[i] = int(ns[9])
 
     return x, y
+
+
+def clean(csv_file, flag=False):
+    if flag:
+        # 取10列
+        csv_file = csv_file[csv_file.columns.values[0:10]]
+        # label 列置零
+        csv_file[csv_file.columns.values[0]] = 0
+        print(csv_file.columns.values)
+
+    return csv_file
 
 
 def show_plot_save(file_path, out_path, file_type, header=False, style=0):
