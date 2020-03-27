@@ -6,19 +6,16 @@ import visulization_results
 import window_process
 import model
 import constants
+import np_to_h5
 
-
-train_path_csv = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
-train_path_txt = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_2.txt'
-
-train_path = [train_path_csv, train_path_txt]
+train_path = '../data/train_data/train_set.h5'
 
 
 if __name__ == '__main__':
 
     model = model.build_model()
 
-    train_data, train_label = window_process.process_data_merge_txt_csv(train_path, merge_txt_csv=True)
+    train_data, train_label = np_to_h5.read_h5(train_path)
     train_label = to_categorical(train_label, len(constants.CATE_LIST))
     print('train_shape: ', train_data.shape)
 
@@ -50,7 +47,7 @@ if __name__ == '__main__':
 
     result = model.fit(train_data,
                        train_label,
-                       batch_size=32,
+                       batch_size=16,
                        callbacks=[model_saver, early_stopper, tensor_board],
                        validation_split=0.1,
                        verbose=2,

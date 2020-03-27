@@ -115,16 +115,16 @@ def process_data_csv(path, shuffle=True):
 
     return data_arr, label_arr
 
-# test_csv_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
-#
-# test_txt_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_2.txt'
-# #
-# test_path = [test_csv_path, test_txt_path]
-# #
 
-# d_a, l_a = process_data_csv(test_csv_path, False)
-#
-# print(len(d_a), np.squeeze(l_a))
+if __name__ == '__main__':
+    train_path_csv = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
+    train_path_txt = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_2.txt'
+
+    train_path = [train_path_csv, train_path_txt]
+    
+    d_a, l_a = process_data_csv(train_path, True)
+
+    print(len(d_a), np.squeeze(l_a))
 
 
 
