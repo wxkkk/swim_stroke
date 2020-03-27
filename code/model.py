@@ -6,17 +6,17 @@ import constants
 def build_model():
     model = Sequential()
     # C1
-    model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=constants.INPUT_SHAPE))
+    model.add(Conv2D(filters=64, kernel_size=(3, 1), activation='elu', padding='valid', input_shape=constants.INPUT_SHAPE))
     # model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
     model.add(Dropout(0.5))
     # C2
-    model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
+    model.add(Conv2D(filters=64, kernel_size=(3, 1), activation='elu', padding='valid'))
     # model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
     model.add(Dropout(0.5))
     # C3
-    model.add(Conv2D(filters=32, kernel_size=(3, 1), activation='elu', padding='valid'))
+    model.add(Conv2D(filters=64, kernel_size=(3, 1), activation='elu', padding='valid'))
     # model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
     model.add(Dropout(0.5))
