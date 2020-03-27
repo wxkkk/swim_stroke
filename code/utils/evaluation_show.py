@@ -1,11 +1,8 @@
 import os
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import window_process, clean_label_show
-
-window_length = 80
-window_repetitive_rate = 0.3
+from utils import clean_label_show
+import constants
 
 
 def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
@@ -20,9 +17,9 @@ def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
         x, y, z = temp[0], temp[1], temp[2]
 
         predicted_labels_total = np.zeros(shape=len(data))
-        for i in range(1, int(len(data) // window_length // (1 - window_repetitive_rate))):
+        for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
             # print(i * window_length * (1 - window_repetitive_rate) + window_length)
-            predicted_labels_total[int(i * window_length * (1 - window_repetitive_rate))] = predicted_labels[i - 1]
+            predicted_labels_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = predicted_labels[i - 1]
 
     # print(plt.style.available)
     # plt.style.use('bmh')
@@ -32,13 +29,13 @@ def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
     vertical_line = plt.axvline(x=0, color='purple', ls='--')
     horizontal_line = plt.axhline(y=0, color='purple', ls='--')
 
-    def update_labels_line(_labels_line, _labels, style, predicted_lines, predicted_labels_total):
+    def update_labels_line(_labels_line, _labels, style, predicted_lines, predicted_label):
         _new_x = [i for i in range(len(_labels)) if _labels[i] == style]
         _labels_line.set_xdata(_new_x)
         _labels_line.set_ydata([15 for _ in range(len(_new_x))])
         fig.canvas.draw_idle()
 
-        _new_y = [i for i in range(len(predicted_labels_total)) if predicted_labels_total[i] == style]
+        _new_y = [j for j in range(len(predicted_label)) if predicted_label[j] == style]
         predicted_lines.set_xdata(_new_y)
         predicted_lines.set_ydata([20 for _ in range(len(_new_y))])
         fig.canvas.draw_idle()

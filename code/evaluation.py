@@ -1,7 +1,8 @@
 import tensorflow as tf
 import numpy as np
 import os
-from utils import window_process, visulization_results, evaluation_show
+import window_process
+import evaluation_show
 
 valid_path_csv = r'../data/valid_data'
 valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\train_2'

@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
-
-window_length = 80
-sensors_parameters = 6
-window_repetitive_rate = 0.3
+import constants
 
 
 def window_data_txt(path, shuffle=False):
@@ -16,17 +13,17 @@ def window_data_txt(path, shuffle=False):
         for i in range(lines_len):
             ns = lines[i][lines[i].find('[')+1: lines[i].find(']')].split(',')
             # input number of sensor parameters
-            for j in range(sensors_parameters - 1):
+            for j in range(constants.SENSOR_PARAMETERS - 1):
                 x[i, j] = float(ns[j])
             y[i] = int(ns[9])
 
     data_wid = []
     label_wid = []
-    for i in range(1, int(len(x) // window_length // (1 - window_repetitive_rate))):
-        i *= int(window_length * (1 - window_repetitive_rate))
+    for i in range(1, int(len(x) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
+        i *= int(constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))
         # print(i)
-        data_wid_temp = x[i:i + window_length - 1]
-        label_wid_temp = max(y[i:i + window_length - 1].astype(int))
+        data_wid_temp = x[i:i + constants.WINDOW_LENGTH - 1]
+        label_wid_temp = max(y[i:i + constants.WINDOW_LENGTH - 1].astype(int))
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
@@ -47,11 +44,11 @@ def window_data_csv(path, shuffle=True):
     data = data.dropna()
     data_wid = []
     label_wid = []
-    for i in range(1, int(len(data) // window_length // (1 - window_repetitive_rate))):
-        i *= int(window_length * (1 - window_repetitive_rate))
+    for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
+        i *= int(constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))
         # print(i)
-        data_wid_temp = data.loc[i:i + window_length - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0']]
-        label_wid_temp = max(data.loc[i:i + window_length - 1, '0'].astype(int))
+        data_wid_temp = data.loc[i:i + constants.WINDOW_LENGTH - 1, ['1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0', '9.0']]
+        label_wid_temp = max(data.loc[i:i + constants.WINDOW_LENGTH - 1, '0'].astype(int))
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
@@ -74,11 +71,11 @@ def window_data_csv(path, shuffle=True):
 
 def to_np(list_1, list_2):
 
-    data_arr = np.zeros((len(list_1), window_length, sensors_parameters, 1), dtype=np.uint8)
+    data_arr = np.zeros((len(list_1), constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1), dtype=np.uint8)
     label_arr = np.zeros((len(list_2), 1), dtype=np.uint8)
 
     for n in range(len(data_arr)):
-        list_1[n] = np.resize(list_1[n], (window_length, sensors_parameters, 1))
+        list_1[n] = np.resize(list_1[n], (constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1))
         list_2[n] = np.resize(list_2[n], 1)
         data_arr[n] = list_1[n]
         label_arr[n] = list_2[n]
