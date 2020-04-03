@@ -14,7 +14,7 @@ def build_model():
     model.add(Conv2D(filters=64, kernel_size=(3, 1), activation='elu', padding='valid'))
     # model.add(BatchNormalization())
     model.add(MaxPool2D((3, 1)))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.25))
     # C3
     model.add(Conv2D(filters=64, kernel_size=(3, 1), activation='elu', padding='valid'))
     # model.add(BatchNormalization())

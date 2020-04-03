@@ -25,13 +25,13 @@ def read_h5(path):
 
 
 if __name__ == '__main__':
-    test_csv_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
-    test_txt_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_2.txt'
-    merge_path = [test_csv_path, test_txt_path]
+    csv_path = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
+    txt_path = r'F:\wangpengfei\PycharmProjects\untitled\data\labelled\train_set_V1_2.txt'
+    merge_path = [csv_path, txt_path]
 
-    h5_path = '../../data/train_data/train_set.h5'
+    train_data, train_label = raw_data_to_window.process_data_txt(txt_path)
+    h5_path = '../../data/train_data/train_set_V1_2_left.h5'
 
-    # train_data, train_label = process_data_to_np(merge_path)
-    # save_h5(train_data, train_label, h5_path)
-    train_data, train_label = read_h5(h5_path)
-    print(train_data.shape, train_label.shape)
+    save_h5(train_data, train_label, h5_path)
+    # train_data, train_label = read_h5(h5_path)
+    # print(train_data.shape, train_label.shape)

@@ -5,7 +5,7 @@ import raw_data_to_window
 import evaluation_show
 
 valid_path_csv = r'../data/valid_data'
-valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\train_2'
+valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\tes'
 valid_files = os.listdir(valid_path_txt)
 
 model = tf.keras.models.load_model('../model/202003261234.h5')

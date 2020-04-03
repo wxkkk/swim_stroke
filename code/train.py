@@ -8,7 +8,7 @@ import model
 import constants
 import np_to_h5
 
-train_path = '../data/train_data/train_set.h5'
+train_path = '../data/train_data/train_set_V1_2_left.h5'
 
 
 if __name__ == '__main__':
