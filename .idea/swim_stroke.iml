@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/code" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/utils" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7 (env1)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.7 (env_tensorflow_2_1)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

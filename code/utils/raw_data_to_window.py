@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import csv
 import constants
 
 
@@ -44,6 +45,28 @@ def window_data_csv(path):
 
         data_wid.append(data_wid_temp)
         label_wid.append(label_wid_temp)
+
+    return data_wid, label_wid
+
+
+def window_data_csv_by_line(path):
+    with open(path, 'r', encoding='utf-8') as csv_f:
+        reader = csv.reader(csv_f)
+        result = list(reader)
+        data_wid = []
+        label_wid = []
+        x = np.zeros(shape=(len(result), 9))
+        y = np.zeros(shape=(len(result),))
+
+        for row_num in range(1, int(len(result) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
+            row_num *= int(constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))
+            print(row_num)
+            for col_num in range(9):
+                x[row_num, col_num] = float(result[row_num][col_num])
+            y[row_num] = int(result[row_num][9])
+
+            data_wid.append(result[row_num:row_num + constants.WINDOW_LENGTH - 1])
+            label_wid.append(max(y[row_num:row_num + constants.WINDOW_LENGTH - 1].astype(int)))
 
     return data_wid, label_wid
 
@@ -100,6 +123,15 @@ def process_data_txt(path, shuffle=True):
 def process_data_csv(path, shuffle=True):
 
     list_1, list_2 = window_data_csv(path)
+
+    data_arr, label_arr = to_np(list_1, list_2, shuffle)
+
+    return data_arr, label_arr
+
+
+def process_data_csv_by_line(path, shuffle=True):
+
+    list_1, list_2 = window_data_csv_by_line(path)
 
     data_arr, label_arr = to_np(list_1, list_2, shuffle)
 

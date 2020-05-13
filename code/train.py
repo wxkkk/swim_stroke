@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     result = model.fit(train_data,
                        train_label,
-                       batch_size=16,
+                       batch_size=128,
                        callbacks=[model_saver, early_stopper, tensor_board],
                        validation_split=0.1,
                        verbose=2,
