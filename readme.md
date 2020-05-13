@@ -26,3 +26,5 @@
 * batch size
 #### `evaluation.py`
 * evaluation and show the predicted results
+#### `gan_generator_data`folder
+* using GAN to generate new data, a new try for data augmentation
