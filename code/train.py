@@ -8,7 +8,7 @@ import model
 import constants
 import np_to_h5
 
-train_path = '../data/train_data/train_set_V1_2_left.h5'
+train_path = r'F:\wangpengfei\PycharmProjects\untitled\data\test_mereged\test.h5'
 
 
 if __name__ == '__main__':
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     early_stopper = EarlyStopping(
         monitor='val_loss',
         min_delta=0,
-        patience=50,
+        patience=100,
         verbose=2,
         mode='min',
         baseline=None,

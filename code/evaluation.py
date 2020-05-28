@@ -4,19 +4,21 @@ import os
 import raw_data_to_window
 import evaluation_show
 
-valid_path_csv = r'../data/valid_data'
+valid_path_csv = r'F:\wangpengfei\PycharmProjects\untitled\data\test_plot'
 valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\test'
-valid_files = os.listdir(valid_path_txt)
 
-model = tf.keras.models.load_model('../model/202004031101.h5')
+
+valid_files = os.listdir(valid_path_csv)
+
+model = tf.keras.models.load_model('../model/202005281715.h5')
 
 model.summary()
 
 for i, f in enumerate(valid_files):
     print('\n')
     print(f)
-    f = os.path.join(valid_path_txt, f)
-    valid_input, train_label = raw_data_to_window.process_data_txt(f, shuffle=False)
+    f = os.path.join(valid_path_csv, f)
+    valid_input, train_label = raw_data_to_window.process_data_csv_by_line(f, shuffle=False)
 
     predicted_results_class = model.predict_classes(valid_input)
 

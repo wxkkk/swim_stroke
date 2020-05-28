@@ -50,23 +50,23 @@ def window_data_csv(path):
 
 
 def window_data_csv_by_line(path):
-    with open(path, 'r', encoding='utf-8') as csv_f:
-        reader = csv.reader(csv_f)
-        result = list(reader)
-        data_wid = []
-        label_wid = []
-        x = np.zeros(shape=(len(result), 9))
-        y = np.zeros(shape=(len(result),))
 
-        for row_num in range(1, int(len(result) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
-            row_num *= int(constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))
-            print(row_num)
-            for col_num in range(9):
-                x[row_num, col_num] = float(result[row_num][col_num])
-            y[row_num] = int(result[row_num][9])
+    data = pd.read_csv(path, header=None)
+    data.dropna()
+    # print(data.columns.values)
 
-            data_wid.append(result[row_num:row_num + constants.WINDOW_LENGTH - 1])
-            label_wid.append(max(y[row_num:row_num + constants.WINDOW_LENGTH - 1].astype(int)))
+    data_wid = []
+    label_wid = []
+    count = 0
+
+    for i in range(int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
+        i *= constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE)
+        # print(i)
+        data_wid.append(data.loc[i: i + constants.WINDOW_LENGTH - 1, [0, 1, 2, 3, 4, 5]])
+        label_wid.append(max(data.loc[i: i + constants.WINDOW_LENGTH - 1, 9]))
+        count += 1
+
+    print('count: ', count)
 
     return data_wid, label_wid
 
@@ -86,7 +86,7 @@ def to_np(data_wid, label_wid, shuffle=True):
     data_list = list(temp[:, 0])
     label_list = list(temp[:, 1])
 
-    data_arr = np.zeros((len(data_list), constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1), dtype=np.uint8)
+    data_arr = np.zeros((len(data_list), constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1), dtype=np.float64)
     label_arr = np.zeros((len(label_list), 1), dtype=np.uint8)
 
     for n in range(len(data_arr)):
@@ -139,12 +139,12 @@ def process_data_csv_by_line(path, shuffle=True):
 
 
 if __name__ == '__main__':
-    train_path_csv = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_1_V2.csv'
+    train_path_csv = r'F:\wangpengfei\PycharmProjects\untitled\data\test_mereged\merged.csv'
     train_path_txt = r'F:/wangpengfei/泳姿/swimming_stroke/swimming/data/processed/train_2.txt'
 
     train_path = [train_path_csv, train_path_txt]
     
-    d_a, l_a = process_data_merge_txt_csv(train_path, True)
+    d_a, l_a = process_data_csv_by_line(train_path[0], True)
 
     print(len(d_a), np.squeeze(l_a))
 
