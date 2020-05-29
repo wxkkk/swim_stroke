@@ -175,9 +175,31 @@ validation loss from first time 30.xx% reduced to 17.xx after one week optimisin
     valid split 0.1
 ---------------------
 the following model were using train_1_V2 and train_2 training
+---------------------
 
 ---------------------
 202003261234 
     valid 84.01%
+---------------------
 
+---------------------
+the following model starting training since 20200528
+---------------------
 
+---------------------
+202005291136
+    train 96.24% valid 96.28%
+    train_loss 0.1278 valid_loss 0.1276
+    recall 0.9602 valid_recall 0.9577
+    shape (90, 6, 1)
+    repetitive rate 20%
+    3 conv 
+    batchnormalization -
+    filters 2, 4, 1
+    maxpooling 3*1, 3*1, 3*1
+    dropout -
+    padding valid, valid, valid
+    dense 32
+    batch 128
+    valid split 0.1
+---------------------

@@ -1,33 +1,52 @@
 import tensorflow as tf
 import numpy as np
 import os
+from tensorflow.keras.utils import to_categorical
 import raw_data_to_window
 import evaluation_show
-
-valid_path_csv = r'F:\wangpengfei\PycharmProjects\untitled\data\test_plot'
-valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\test'
+import np_to_h5
 
 
-valid_files = os.listdir(valid_path_csv)
+def evaluation_show_single(model, path):
+    valid_files = os.listdir(path)
 
-model = tf.keras.models.load_model('../model/202005281715.h5')
+    for i, f in enumerate(valid_files):
+        print('\n')
+        print(f)
+        f = os.path.join(path, f)
+        valid_input, train_label = raw_data_to_window.process_data_csv_by_line(f, shuffle=False)
 
-model.summary()
+        predicted_results_class = model.predict_classes(valid_input)
 
-for i, f in enumerate(valid_files):
-    print('\n')
-    print(f)
-    f = os.path.join(valid_path_csv, f)
-    valid_input, train_label = raw_data_to_window.process_data_csv_by_line(f, shuffle=False)
+        train_label = np.squeeze(train_label)
+        print('truth count: ', len(train_label) - sum(train_label == 0), ',',
+              'predicted count: ', len(predicted_results_class) - sum(predicted_results_class == 0))
+        print('Truth label:     ', train_label)
+        print('Predicted label: ', predicted_results_class)
 
-    predicted_results_class = model.predict_classes(valid_input)
+        # plot predicted
+        evaluation_show.show_plot(f, f, truth_lables=train_label, predicted_labels=predicted_results_class)
 
-    train_label = np.squeeze(train_label)
-    print('truth count: ', len(train_label) - sum(train_label == 0), ',',
-          'predicted count: ', len(predicted_results_class) - sum(predicted_results_class == 0))
-    print('Truth label:     ', train_label)
-    print('Predicted label: ', predicted_results_class)
 
-    # plot predicted
-    evaluation_show.show_plot(f, f, predicted_results_class)
+def evaluation_summary(model, path):
+    valid_data, valid_label = np_to_h5.read_h5(path)
+
+    valid_label = to_categorical(valid_label)
+
+    model.evaluate(valid_data, valid_label, verbose=2)
+
+
+if __name__ == '__main__':
+    valid_path_csv = r'../data/test_data/seperate'
+    valid_path_txt = r''
+
+    valid_total = r'../data/test_data/test.h5'
+
+    model = tf.keras.models.load_model('../model/202005291547.h5')
+
+    model.summary()
+
+    # evaluation_show_single(model, valid_path_csv)
+
+    evaluation_summary(model, valid_total)
 

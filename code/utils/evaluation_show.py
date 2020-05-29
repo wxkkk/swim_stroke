@@ -5,21 +5,24 @@ from utils import clean_label_show
 import constants
 
 
-def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
+def show_plot(file_path, out_path, predicted_labels, truth_lables, header=False, style=0):
 
     if os.path.splitext(file_path)[-1] == '.csv':
         data = clean_label_show.read_csv(file_path)
-        labels, x, y, z = data[0], data[1], data[2], data[3]
+        labels, x, y, z = data[5], data[1], data[2], data[3]
 
         predicted_labels_total = np.zeros(shape=len(data))
+        truth_lables_total = np.zeros(shape=len(data))
+
         for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
             # print(i * window_length * (1 - window_repetitive_rate) + window_length)
             predicted_labels_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = predicted_labels[i - 1]
+            truth_lables_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = truth_lables[i - 1]
 
     if os.path.splitext(file_path)[-1] == '.txt':
         data, labels = clean_label_show.read_txt(file_path)
-        temp = data.T
-        x, y, z = temp[0], temp[1], temp[2]
+        data = data.T
+        x, y, z = data[0], data[1], data[2]
 
         predicted_labels_total = np.zeros(shape=len(data))
         for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
@@ -47,19 +50,19 @@ def show_plot(file_path, out_path, predicted_labels, header=False, style=0):
 
     labels_line = plt.plot([], [], 's', color='orange')[0]
     predicted_line = plt.plot([], [], 's', color='orange')[0]
-    update_labels_line(labels_line, labels, 1, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables_total, 1, predicted_line, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='blue')[0]
     predicted_line = plt.plot([], [], 's', color='blue')[0]
-    update_labels_line(labels_line, labels, 2, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables_total, 2, predicted_line, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='purple')[0]
     predicted_line = plt.plot([], [], 's', color='purple')[0]
-    update_labels_line(labels_line, labels, 3, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables_total, 3, predicted_line, predicted_labels_total)
 
     labels_line = plt.plot([], [], 's', color='slategrey')[0]
     predicted_line = plt.plot([], [], 's', color='slategrey')[0]
-    update_labels_line(labels_line, labels, 4, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables_total, 4, predicted_line, predicted_labels_total)
 
     def on_key_press(event):
         if event.key == 'a' or event.key == 'd':

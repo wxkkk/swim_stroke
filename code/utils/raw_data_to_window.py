@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 import constants
+import data_augmentation
 
 
 def window_data_txt(path):
@@ -49,7 +50,7 @@ def window_data_csv(path):
     return data_wid, label_wid
 
 
-def window_data_csv_by_line(path):
+def window_data_csv_by_line(path, augmentation=False):
 
     data = pd.read_csv(path, header=None)
     data.dropna()
@@ -65,6 +66,15 @@ def window_data_csv_by_line(path):
         data_wid.append(data.loc[i: i + constants.WINDOW_LENGTH - 1, [0, 1, 2, 3, 4, 5]])
         label_wid.append(max(data.loc[i: i + constants.WINDOW_LENGTH - 1, 9]))
         count += 1
+
+    if augmentation:
+        data_reversed_aug = data_augmentation.csv_data_reserved_aug(data, [0, 4, 5])
+
+        for i in range(int(len(data_reversed_aug) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
+            i *= constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE)
+            data_wid.append(data_reversed_aug.loc[i: i + constants.WINDOW_LENGTH - 1, [0, 1, 2, 3, 4, 5]])
+            label_wid.append(max(data_reversed_aug.loc[i: i + constants.WINDOW_LENGTH - 1, 9]))
+            count += 1
 
     print('count: ', count)
 
@@ -129,9 +139,9 @@ def process_data_csv(path, shuffle=True):
     return data_arr, label_arr
 
 
-def process_data_csv_by_line(path, shuffle=True):
+def process_data_csv_by_line(path, shuffle=True, augmentation=False):
 
-    list_1, list_2 = window_data_csv_by_line(path)
+    list_1, list_2 = window_data_csv_by_line(path, augmentation)
 
     data_arr, label_arr = to_np(list_1, list_2, shuffle)
 

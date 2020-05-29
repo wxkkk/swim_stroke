@@ -31,4 +31,16 @@ import pandas as pd
 
 # print(time.localtime(time.time()))
 # print(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
-print(int(4000 // 90 // 0.3 ))
+# print(int(4000 // 90 // 0.3 ))
+
+data = pd.read_csv('../../data/train_data/train.csv', header=None)
+
+# print(data.head())
+
+print(data.loc[:, [0, 1, 2, 3, 4, 5]])
+
+data.loc[:, [0, 5, 4]] = -1 * data.loc[:, [0, 5, 4]]
+
+print(data.loc[:, [0, 1, 2, 3, 4, 5]])
+
+
