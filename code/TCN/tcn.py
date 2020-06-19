@@ -6,7 +6,10 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers import Activation, SpatialDropout1D, Lambda
 from tensorflow.keras.layers import Layer, Conv1D, Dense, BatchNormalization, LayerNormalization
 
-
+'''
+import code file from:
+    https://github.com/philipperemy/keras-tcn/blob/789e742e3a38f424d10bb3c62ab84bc354718dcc/tcn/tcn.py
+'''
 def is_power_of_two(num: int):
     return num != 0 and ((num & (num - 1)) == 0)
 
