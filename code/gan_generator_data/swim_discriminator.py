@@ -1,7 +1,6 @@
-import tensorflow as tf
 from tensorflow.keras import layers, Sequential
-from tensorflow.keras.layers import Conv2D, Dropout, Flatten, Dense
-import constants
+from tensorflow.keras.layers import Conv2D, Dropout, Flatten
+from CNN import constants
 
 
 def make_swim_dis():

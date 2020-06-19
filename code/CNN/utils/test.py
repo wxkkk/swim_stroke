@@ -6,7 +6,7 @@ import pandas as pd
 # import keras
 # from utils import window_process
 
-# train_path = r'../data/test_data/original'
+# train_path = r'../generator_data/test_data/original'
 # train = pd.read_csv(train_path + '/train.csv')
 # test = pd.read_csv(train_path + '/test.csv')
 #
@@ -33,9 +33,9 @@ import pandas as pd
 # print(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
 # print(int(4000 // 90 // 0.3 ))
 
-data = pd.read_csv('../../data/train_data/train.csv', header=None)
+data = pd.read_csv('../../../data/train_data/train.csv', header=None)
 
-# print(data.head())
+# print(generator_data.head())
 
 print(data.loc[:, [0, 1, 2, 3, 4, 5]])
 

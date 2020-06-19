@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import constants
+from CNN import constants
 import data_augmentation
 
 
@@ -53,7 +53,7 @@ def window_data_csv_by_line(path, augmentation=False):
 
     data = pd.read_csv(path, header=None)
     data.dropna()
-    # print(data.columns.values)
+    # print(generator_data.columns.values)
 
     data_wid = []
     label_wid = []
@@ -91,7 +91,7 @@ def to_np(data_wid, label_wid, shuffle=True):
     if shuffle:
         np.random.shuffle(temp)
 
-    # get data, label
+    # get generator_data, label
     data_list = list(temp[:, 0])
     label_list = list(temp[:, 1])
 

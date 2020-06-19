@@ -3,11 +3,10 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 import time
 import train_result_plot
-import model
-import constants
+from CNN import constants, model
 import raw_data_to_h5
 
-train_path = r'../data/train_data/train.h5'
+train_path = r'../../data/train_data/train.h5'
 
 
 if __name__ == '__main__':

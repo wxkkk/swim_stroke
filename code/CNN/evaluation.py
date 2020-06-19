@@ -37,15 +37,15 @@ def evaluation_summary(model, path):
 
 
 if __name__ == '__main__':
-    valid_path_csv = r'../data/test_data/seperate'
+    valid_path_csv = r'../../data/test_data/seperate'
     valid_path_txt = r''
 
-    valid_total = r'../data/test_data/test.h5'
+    valid_total = r'../generator_data/test_data/test.h5'
 
-    model = tf.keras.models.load_model('../model/TCN_model/202006191452.h5')
+    model = tf.keras.models.load_model('../../model/TCN_model/202006191528.h5')
 
     model.summary()
 
-    evaluation_show_single(model, valid_path_csv)
-    #
-    # evaluation_summary(model, valid_total)
+    # evaluation_show_single(model, valid_path_csv)
+
+    evaluation_summary(model, valid_total)

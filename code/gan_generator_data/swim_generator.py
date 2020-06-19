@@ -1,8 +1,6 @@
-import tensorflow as tf
-import numpy as np
-from tensorflow.keras import layers, Sequential
+from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, BatchNormalization, LeakyReLU, Conv2DTranspose, Reshape
-import constants
+from CNN import constants
 
 
 def make_swim_generator():

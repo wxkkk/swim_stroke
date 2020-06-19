@@ -184,8 +184,8 @@ if __name__ == '__main__':
     # 4:backstroke
     swim_style = 4
     # style_team_hand_00.csv
-    # input_path = '../data/processed/train_2/4/backstroke_4_right_01.csv'
-    # output_path = '../data/processed/train_1_V2/freestyle_team2_right_19.csv'
+    # input_path = '../generator_data/processed/train_2/4/backstroke_4_right_01.csv'
+    # output_path = '../generator_data/processed/train_1_V2/freestyle_team2_right_19.csv'
     valid_path = r'../../data/valid_data/backstroke_team1_left_21.csv'
     valid_path_txt = r'F:\wangpengfei\泳姿\swimming_stroke\swimming\data\processed\train_2\自由泳_右手1_张前.txt'
     #

@@ -4,17 +4,16 @@ import os
 from process_data import read_h5
 import swim_generator
 import swim_discriminator
-import constants
+from CNN import constants
 
-
-h5_path = '../data/test_generator.h5'
+h5_path = '../../model/GAN_model/test_generator.h5'
 train_data, train_label = read_h5(h5_path)
 train_data = train_data.reshape(train_data.shape[0], constants.WINDOW_LENGTH, constants.SENSOR_PARAMETERS, 1).astype('float32')
 
 BUFFER_SIZE = 60000
 BATCH_SIZE = 256
 
-# Batch and shuffle the data
+# Batch and shuffle the generator_data
 train_dataset = tf.data.Dataset.from_tensor_slices(train_data).shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
 
 generator = swim_generator.make_swim_generator()
@@ -98,7 +97,7 @@ def train(dataset, epochs):
     out_generator = generator(seed, training=False)
     print(out_generator.shape)
 
-    out_path = r'../data/results_1/result_{}.txt'
+    out_path = r'../../../data/generator_data/results_1/result_{}.txt'
     for i in range(len(out_generator)):
         write_file(out_generator[i], out_path.format(i))
 

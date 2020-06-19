@@ -1,6 +1,6 @@
 from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout, BatchNormalization
-import constants
+from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dense, BatchNormalization
+from CNN import constants
 
 
 def build_model():

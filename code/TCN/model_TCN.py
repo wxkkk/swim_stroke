@@ -1,10 +1,7 @@
 from tensorflow.keras import Sequential, Input
-import tensorflow.keras.backend as K
-from tensorflow.keras.layers import Embedding, Conv2D, MaxPool2D, Flatten, Dense, Dropout, BatchNormalization
-from tensorflow.keras.layers import Lambda
-import constants
+from tensorflow.keras.layers import Dense, Dropout
+from CNN import constants
 from TCN.tcn import TCN
-import constants
 
 
 def build_model():

@@ -1,8 +1,8 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import clean_label_show
-import constants
+import clean_label_show
+from CNN import constants
 
 
 def show_plot(file_path, out_path, predicted_labels, truth_lables, header=False, style=0):

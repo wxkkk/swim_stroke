@@ -3,9 +3,9 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 import time
 import train_result_plot
-import constants
+from CNN import constants
 import raw_data_to_h5
-from TCN import model_TCN, model_dilated_conv
+from TCN import model_dilated_conv
 
 train_path = r'../../data/train_data/train.h5'
 

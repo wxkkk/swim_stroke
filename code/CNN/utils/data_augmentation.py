@@ -8,7 +8,7 @@ def csv_data_reserved_aug(data, list):
 
 
 if __name__ == '__main__':
-    data = pd.read_csv('../../data/train_data/train.csv', header=None)
+    data = pd.read_csv('../../../data/train_data/train.csv', header=None)
 
     print(data)
 
