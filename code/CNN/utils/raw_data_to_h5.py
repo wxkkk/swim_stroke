@@ -12,13 +12,13 @@ def process_data_to_np(path):
 
 def save_h5(data, labels, save_path):
     with h5py.File(save_path, 'w') as f:
-        f['generator_data'] = data
+        f['data'] = data
         f['labels'] = labels
 
 
 def read_h5(path):
     with h5py.File(path, 'r') as f:
-        data = np.array(f['generator_data'])
+        data = np.array(f['data'])
         labels = np.array(f['labels'])
 
     return data, labels
