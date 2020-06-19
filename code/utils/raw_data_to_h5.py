@@ -25,12 +25,12 @@ def read_h5(path):
 
 
 if __name__ == '__main__':
-    csv_path = r'../../data/test_data/test.csv'
+    csv_path = r'../../data/train_data/train_walk.csv'
     # txt_path = r'F:\wangpengfei\PycharmProjects\untitled\data\labelled\train_set_V1_2.txt'
     # merge_path = [csv_path, txt_path]
 
     train_data, train_label = raw_data_to_window.process_data_csv_by_line(csv_path, augmentation=True)
-    h5_path = r'../../data/test_data/test.h5'
+    h5_path = r'../../data/train_data/train_walk.h5'
 
     save_h5(train_data, train_label, h5_path)
     # train_data, train_label = read_h5(h5_path)

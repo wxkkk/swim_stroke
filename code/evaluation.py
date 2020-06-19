@@ -4,7 +4,7 @@ import os
 from tensorflow.keras.utils import to_categorical
 import raw_data_to_window
 import evaluation_show
-import np_to_h5
+import raw_data_to_h5
 
 
 def evaluation_show_single(model, path):
@@ -29,7 +29,7 @@ def evaluation_show_single(model, path):
 
 
 def evaluation_summary(model, path):
-    valid_data, valid_label = np_to_h5.read_h5(path)
+    valid_data, valid_label = raw_data_to_h5.read_h5(path)
 
     valid_label = to_categorical(valid_label)
 
@@ -42,11 +42,10 @@ if __name__ == '__main__':
 
     valid_total = r'../data/test_data/test.h5'
 
-    model = tf.keras.models.load_model('../model/202005291547.h5')
+    model = tf.keras.models.load_model('../model/TCN_model/202006191452.h5')
 
     model.summary()
 
-    # evaluation_show_single(model, valid_path_csv)
-
-    evaluation_summary(model, valid_total)
-
+    evaluation_show_single(model, valid_path_csv)
+    #
+    # evaluation_summary(model, valid_total)

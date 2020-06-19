@@ -3,16 +3,16 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 import time
 import train_result_plot
-import model
 import constants
 import raw_data_to_h5
+from TCN import model_TCN, model_dilated_conv
 
-train_path = r'../data/train_data/train.h5'
+train_path = r'../../data/train_data/train.h5'
 
 
 if __name__ == '__main__':
 
-    model = model.build_model()
+    model = model_dilated_conv.build_model()
 
     train_data, train_label = raw_data_to_h5.read_h5(train_path)
     train_label = to_categorical(train_label, len(constants.CATE_LIST))
@@ -23,7 +23,7 @@ if __name__ == '__main__':
                   metrics=[tf.keras.metrics.categorical_accuracy, tf.keras.metrics.Recall()])
 
     cur_time = int(time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
-    model_path = '../model/CNN_model/{}.h5'.format(cur_time)
+    model_path = '../../model/TCN_model/{}.h5'.format(cur_time)
     log_name = '{}'.format(cur_time)
 
     model_saver = ModelCheckpoint(
@@ -42,7 +42,7 @@ if __name__ == '__main__':
         restore_best_weights=True
     )
 
-    tensor_board = TensorBoard(log_dir=r'..\log\{}'.format(log_name))
+    tensor_board = TensorBoard(log_dir=r'..\..\log\{}'.format(log_name))
 
     result = model.fit(train_data,
                        train_label,
