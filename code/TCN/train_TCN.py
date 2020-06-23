@@ -5,18 +5,18 @@ import time
 import train_result_plot
 from CNN import constants
 import raw_data_to_h5
-from TCN import model_dilated_conv
+from TCN import model_dilated_conv, model_TCN
 
 train_path = r'../../data/train_data/train.h5'
 
 
 if __name__ == '__main__':
 
-    model = model_dilated_conv.build_model()
-
     train_data, train_label = raw_data_to_h5.read_h5(train_path)
     train_label = to_categorical(train_label, len(constants.CATE_LIST))
     print('train_shape: ', train_data.shape)
+
+    model = model_TCN.build_model()
 
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
