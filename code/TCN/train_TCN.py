@@ -16,7 +16,7 @@ if __name__ == '__main__':
     train_label = to_categorical(train_label, len(constants.CATE_LIST))
     print('train_shape: ', train_data.shape)
 
-    model = model_TCN.build_model()
+    model = model_dilated_conv.build_model()
 
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',

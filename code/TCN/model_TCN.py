@@ -15,7 +15,7 @@ def build_model():
     num_features_cnn = np.prod(K.int_shape(inputs)[1:])
     x = Lambda(lambda y: K.reshape(y, (-1, 1, num_features_cnn)))(inputs)
 
-    x = TCN(kernel_size=6, nb_filters=16, dilations=(1, 2, 4, 8), use_skip_connections=True)(x)
+    x = TCN(kernel_size=6, nb_filters=16, dilations=(1, 2, 4, 8, 16, 32), use_skip_connections=False)(x)
 
     x = Dense(len(constants.CATE_LIST), activation='softmax')(x)
 

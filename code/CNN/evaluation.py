@@ -25,7 +25,7 @@ def evaluation_show_single(model, path):
         print('Predicted label: ', predicted_results_class)
 
         # plot predicted
-        evaluation_show.show_plot(f, f, truth_lables=train_label, predicted_labels=predicted_results_class)
+        evaluation_show.show_save_mark_as_label(f, f, truth_lables=train_label, predicted_labels=predicted_results_class)
 
 
 def evaluation_summary(model, path):
@@ -37,15 +37,15 @@ def evaluation_summary(model, path):
 
 
 if __name__ == '__main__':
-    valid_path_csv = r'../../data/test_data/seperate'
+    valid_path_csv = r'F:\data\测试自标注\valid'
     # valid_path_txt = r''
 
     valid_total = r'../../data/test_data/test.h5'
 
-    model = tf.keras.models.load_model('../../model/TCN_model/202006230949.h5')
+    model = tf.keras.models.load_model('../../model/CNN_model/202009151719.h5')
 
     model.summary()
 
     # evaluation_show_single(model, valid_path_csv)
-
+    #
     evaluation_summary(model, valid_total)

@@ -1,12 +1,13 @@
 import tensorflow as tf
+import numpy as np
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 import time
 import train_result_plot
-from CNN import constants, model
-import raw_data_to_h5
+from multi_len_CNN import constants, model
+from multi_len_CNN.utils import raw_data_to_h5
 
-train_path = r'../../data/train_data/20200915.h5'
+train_path = r'../../data/train_data/20200917/20200917.h5'
 
 
 if __name__ == '__main__':
@@ -15,7 +16,8 @@ if __name__ == '__main__':
 
     train_data, train_label = raw_data_to_h5.read_h5(train_path)
     train_label = to_categorical(train_label, len(constants.CATE_LIST))
-    print('train_shape: ', train_data.shape)
+    train_label = np.expand_dims(train_label, axis=-2)
+    print('train_shape: ', train_data.shape, '\nlabels shape: ', train_label.shape)
 
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
@@ -45,7 +47,7 @@ if __name__ == '__main__':
 
     result = model.fit(train_data,
                        train_label,
-                       batch_size=128,
+                       batch_size=32,
                        callbacks=[model_saver, early_stopper, tensor_board],
                        validation_split=0.1,
                        verbose=2,

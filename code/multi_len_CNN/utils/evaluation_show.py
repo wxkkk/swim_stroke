@@ -2,38 +2,20 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import clean_label_show
-from CNN import constants
+from multi_len_CNN import constants
 import csv
 
 
 def show_plot(file_path, out_path, predicted_labels, truth_lables, header=False, style=0):
-    if os.path.splitext(file_path)[-1] == '.csv':
-        data = clean_label_show.read_csv(file_path)
-        labels, x, y, z = data[9], data[1], data[2], data[3]
-
-        predicted_labels_total = np.zeros(shape=len(data))
-        truth_lables_total = np.zeros(shape=len(data))
-
-        for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
-            # print(i * window_length * (1 - window_repetitive_rate) + window_length)
-            predicted_labels_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
-            predicted_labels[i - 1]
-            truth_lables_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
-            truth_lables[i - 1]
-
-    if os.path.splitext(file_path)[-1] == '.txt':
-        data, labels = clean_label_show.read_txt(file_path)
-        data = data.T
-        x, y, z = data[0], data[1], data[2]
-
-        predicted_labels_total = np.zeros(shape=len(data))
-        for i in range(1, int(len(data) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
-            # print(i * window_length * (1 - window_repetitive_rate) + window_length)
-            predicted_labels_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
-            predicted_labels[i - 1]
-
-    # print(plt.style.available)
-    # plt.style.use('bmh')
+    with open(file_path, 'r', encoding='utf-8') as csv_f:
+        reader = csv.reader(csv_f)
+        result = list(reader)
+        x = np.zeros(shape=(len(result), 9))
+        labels = np.zeros(shape=(len(result),))
+        for row_num in range(len(result)):
+            for col_num in range(9):
+                x[row_num, col_num] = float(result[row_num][col_num])
+            labels[row_num] = int(result[row_num][9])
 
     fig = plt.figure()
     # ax = fig.add_subplot(1, 1, 1)
@@ -53,19 +35,19 @@ def show_plot(file_path, out_path, predicted_labels, truth_lables, header=False,
 
     labels_line = plt.plot([], [], 's', color='orange')[0]
     predicted_line = plt.plot([], [], 's', color='orange')[0]
-    update_labels_line(labels_line, truth_lables_total, 1, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables, 1, predicted_line, predicted_labels)
 
     labels_line = plt.plot([], [], 's', color='blue')[0]
     predicted_line = plt.plot([], [], 's', color='blue')[0]
-    update_labels_line(labels_line, truth_lables_total, 2, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables, 2, predicted_line, predicted_labels)
 
     labels_line = plt.plot([], [], 's', color='purple')[0]
     predicted_line = plt.plot([], [], 's', color='purple')[0]
-    update_labels_line(labels_line, truth_lables_total, 3, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables, 3, predicted_line, predicted_labels)
 
     labels_line = plt.plot([], [], 's', color='slategrey')[0]
     predicted_line = plt.plot([], [], 's', color='slategrey')[0]
-    update_labels_line(labels_line, truth_lables_total, 4, predicted_line, predicted_labels_total)
+    update_labels_line(labels_line, truth_lables, 4, predicted_line, predicted_labels)
 
     def on_key_press(event):
         if event.key == 'a' or event.key == 'd':
@@ -141,31 +123,18 @@ def show_plot(file_path, out_path, predicted_labels, truth_lables, header=False,
     fig.canvas.mpl_connect('motion_notify_event', motion)
     fig.canvas.mpl_connect('key_press_event', on_key_press)
 
-    plt.plot(x, color='tomato', label='x')
-    plt.plot(y, color='forestgreen', label='y')
-    plt.plot(z, color='steelblue', label='z')
+    x = x.T
+    plt.plot(x[0], color='tomato', label='x')
+    plt.plot(x[1], color='forestgreen', label='y')
+    plt.plot(x[2], color='steelblue', label='z')
+
+    figManager = plt.get_current_fig_manager()
+    figManager.window.showMaximized()
+    plt.tight_layout()
 
     plt.grid()
     plt.legend()
     plt.show()
-
-    if os.path.splitext(file_path)[-1] == '.csv':
-        data.to_csv(out_path, index=False, header=header)
-    if os.path.splitext(file_path)[-1] == '.txt':
-        with open(out_path, 'w', encoding='utf-8') as f:
-            rewrite_lines = []
-            for _ in range(len(data)):
-                rewrite_lines.append('[%f, %f, %f, %f, %f, %f, %f, %f, %f, %d]\n' % (data[_][0],
-                                                                                     data[_][1],
-                                                                                     data[_][2],
-                                                                                     data[_][3],
-                                                                                     data[_][4],
-                                                                                     data[_][5],
-                                                                                     data[_][6],
-                                                                                     data[_][7],
-                                                                                     data[_][8],
-                                                                                     labels[_]))
-            f.writelines(rewrite_lines)
 
 
 def show_save_mark_as_label(file_path, out_path, predicted_labels, truth_lables, header=False, style=0):
@@ -185,8 +154,8 @@ def show_save_mark_as_label(file_path, out_path, predicted_labels, truth_lables,
 
         for i in range(1, int(len(result) // constants.WINDOW_LENGTH // (1 - constants.WINDOW_REPETITIVE_RATE))):
             # print(i * window_length * (1 - window_repetitive_rate) + window_length)
-            new_y[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
-                predicted_labels[i - 1]
+            # new_y[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
+            #     predicted_labels[i - 1]
             predicted_labels_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
                 predicted_labels[i - 1]
             truth_lables_total[int(i * constants.WINDOW_LENGTH * (1 - constants.WINDOW_REPETITIVE_RATE))] = \
@@ -311,13 +280,13 @@ def show_save_mark_as_label(file_path, out_path, predicted_labels, truth_lables,
     plt.legend()
     plt.show()
 
-    with open(out_path, 'w', encoding='utf-8') as f:
-        rewrite_lines = []
-        for _ in range(len(result)):
-            rewrite_lines.append('%f, %f, %f, %f, %f, %f, %f, %f, %f, %d\n' %
-                                 (x[_][0], x[_][1], x[_][2],
-                                  x[_][3], x[_][4], x[_][5],
-                                  x[_][6], x[_][7], x[_][8],
-                                  new_y[_]))
-        f.writelines(rewrite_lines)
+    # with open(out_path, 'w', encoding='utf-8') as f:
+    #     rewrite_lines = []
+    #     for _ in range(len(result)):
+    #         rewrite_lines.append('%f, %f, %f, %f, %f, %f, %f, %f, %f, %d\n' %
+    #                              (x[_][0], x[_][1], x[_][2],
+    #                               x[_][3], x[_][4], x[_][5],
+    #                               x[_][6], x[_][7], x[_][8],
+    #                               new_y[_]))
+    #     f.writelines(rewrite_lines)
 
